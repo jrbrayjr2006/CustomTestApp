@@ -7,12 +7,14 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.itcert.customtestapp.TestListFragment.OnTestSelectedListener;
 import com.itcert.customtestapp.TestQuestionFragment.OnTestListener;
+import com.itcert.customtestapp.model.TestObject;
 
 
 
@@ -20,6 +22,10 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 	
 	private FragmentManager fragmentManager;
 	private Fragment mTestListFragment;
+	private ArrayList<TestObject> testObjectList;
+	private TestObject myTest;
+	
+	private ArrayList<String> mTestList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +40,20 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
         		mTestListFragment = new TestListFragment();
         	}
         	fragmentManager.beginTransaction().add(R.id.fragmentContainer, mTestListFragment).commit();
+        }
+        
+        mTestList = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.tests)));
+        
+        // initialize tests
+        testObjectList = new ArrayList<TestObject>();
+        int i = 0;
+        // populate test list
+        for(String _testTitle : mTestList) {
+        	TestObject to = new TestObject();
+        	i++;
+        	to.setTestTitle(_testTitle);
+        	to.setIndex(i);
+        	testObjectList.add(to);
         }
     }
 
@@ -68,9 +88,16 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 		}
 		
 		TestQuestionFragment testQuestionFragment = new TestQuestionFragment();
+		/*
+		Bundle arguments = new Bundle();
+		myTest = testObjectList.get(index);
+		arguments.putCharSequence("title", myTest.getTestTitle());
+		arguments.putInt("index", myTest.getIndex());
+		testQuestionFragment.setArguments(arguments);
+		*/
 		fragmentManager.beginTransaction().replace(R.id.fragmentContainer, testQuestionFragment).commit();
-		setTitle(testList.get(index));
 		
+		setTitle(testList.get(index));
 	}
 
 
