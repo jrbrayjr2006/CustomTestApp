@@ -89,13 +89,14 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 		}
 		
 		TestQuestionFragment testQuestionFragment = new TestQuestionFragment();
-		/*
+		
 		Bundle arguments = new Bundle();
 		myTest = testObjectList.get(index);
-		arguments.putCharSequence("title", myTest.getTestTitle());
-		arguments.putInt("index", myTest.getIndex());
+		//arguments.putCharSequence("title", myTest.getTestTitle());
+		//arguments.putInt("index", myTest.getIndex());
+		arguments.putInt("index", index);
 		testQuestionFragment.setArguments(arguments);
-		*/
+		
 		fragmentManager.beginTransaction().replace(R.id.fragmentContainer, testQuestionFragment).commit();
 		
 		setTitle(testList.get(index));

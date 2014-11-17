@@ -3,10 +3,13 @@
  */
 package com.itcert.customtestapp;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.view.GestureDetectorCompat;
@@ -19,6 +22,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.itcert.customtestapp.model.Question;
@@ -47,10 +51,12 @@ public class TestQuestionFragment extends Fragment {
 	private Button cButton;
 	private Button dButton;
 	private Button solutionButton;
+	private ImageView questionImageView;
 	long timeInMilliseconds = 0L;
 	long timeSwapBuff = 0L;
 	long updatedTime10 = 600000;
 	//long updatedTime10 = 10000;  //TODO for testing only, remove when ready to ship
+	private int testIndex;
 	private int currentIndex;
 	
 	public interface OnTestListener {
@@ -66,7 +72,7 @@ public class TestQuestionFragment extends Fragment {
 	}
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup root, Bundle savedInstanceStqte) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup root, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_question, root, false);
 		
 		timerValue = (TextView)v.findViewById(R.id.timerTextView);
@@ -76,7 +82,10 @@ public class TestQuestionFragment extends Fragment {
 		bButton = (Button)v.findViewById(R.id.buttonB);
 		cButton = (Button)v.findViewById(R.id.buttonC);
 		dButton = (Button)v.findViewById(R.id.buttonD);
+		questionImageView = (ImageView)v.findViewById(R.id.questionImageView);
 		solutionButton = (Button)v.findViewById(R.id.buttonSolution);
+		
+		testIndex = getArguments().getInt("index");
 		
 		myTest = new TestObject();
 		questions = new ArrayList<Question>();
@@ -208,6 +217,28 @@ public class TestQuestionFragment extends Fragment {
 	private void updateCurrentQuestion(String _selectedOption) {
 		questions.get(currentIndex).setSelectedOption(_selectedOption);
 	}
+	
+	private void updateImage() {
+		try 
+		{
+			int t = testIndex + 1;
+			int q = currentIndex + 1;
+			String imageName = "pictures/" + t + "-" + q + ".png";
+			Log.d(DEBUG_TAG, imageName);
+		    // get input stream
+		    InputStream ims = getActivity().getAssets().open(imageName);
+		    // load image as Drawable
+		    Drawable d = Drawable.createFromStream(ims, null);
+		    // set image to ImageView
+		    questionImageView.setImageDrawable(d);
+		    questionImageView.setMinimumWidth(480);
+		    questionImageView.setMinimumHeight(320);
+		}
+		catch(IOException ex) 
+		{
+		    return;
+		}
+	}
 
 	/**
 	 * 
@@ -238,6 +269,7 @@ public class TestQuestionFragment extends Fragment {
                 	x--;
                 	// reset button colors when going to new question
                 	defaultButtonTextColor();
+                	updateImage();
                 }
             }
             // Right to left swipe action               
@@ -247,6 +279,7 @@ public class TestQuestionFragment extends Fragment {
                 	x++;
                 	// reset button colors when going to new question
                 	defaultButtonTextColor();
+                	updateImage();
                 }
             }
             currentIndex = x - 1;
