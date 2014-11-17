@@ -192,7 +192,7 @@ public class TestQuestionFragment extends Fragment {
 		    	 solutionButton.setEnabled(true);
 		     }
 		  }.start();
-
+		  updateImage();
 
 		return v;
 	}
@@ -269,7 +269,6 @@ public class TestQuestionFragment extends Fragment {
                 	x--;
                 	// reset button colors when going to new question
                 	defaultButtonTextColor();
-                	updateImage();
                 }
             }
             // Right to left swipe action               
@@ -279,10 +278,10 @@ public class TestQuestionFragment extends Fragment {
                 	x++;
                 	// reset button colors when going to new question
                 	defaultButtonTextColor();
-                	updateImage();
                 }
             }
             currentIndex = x - 1;
+            updateImage();
             String opts = questions.get(currentIndex).getSelectedOption();
             if(opts != null) {
             	if(opts.equals("A")) {

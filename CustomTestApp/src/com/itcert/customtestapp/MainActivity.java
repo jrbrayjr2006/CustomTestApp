@@ -23,7 +23,7 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 	private FragmentManager fragmentManager;
 	private Fragment mTestListFragment;
 	private ArrayList<TestObject> testObjectList;
-	private TestObject myTest;
+	//private TestObject myTest;
 	
 	private ArrayList<String> mTestList;
 
@@ -83,7 +83,7 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 	public void onTestSelected(int index) {
 		// TODO Auto-generated method stub
 		ArrayList<String> testList = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.tests)));
-		Toast.makeText(this, "Test selected:  " + testList.get(index), Toast.LENGTH_SHORT).show();
+		//Toast.makeText(this, "Test selected:  " + testList.get(index), Toast.LENGTH_SHORT).show();
 		if(fragmentManager == null) {
 			fragmentManager = getFragmentManager();
 		}
@@ -91,7 +91,7 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 		TestQuestionFragment testQuestionFragment = new TestQuestionFragment();
 		
 		Bundle arguments = new Bundle();
-		myTest = testObjectList.get(index);
+		//myTest = testObjectList.get(index);
 		//arguments.putCharSequence("title", myTest.getTestTitle());
 		//arguments.putInt("index", myTest.getIndex());
 		arguments.putInt("index", index);
