@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import com.itcert.customtestapp.TestListFragment.OnTestSelectedListener;
 import com.itcert.customtestapp.TestQuestionFragment.OnTestListener;
 import com.itcert.customtestapp.model.TestObject;
@@ -21,6 +21,7 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 	
 	private FragmentManager fragmentManager;
 	private Fragment mTestListFragment;
+	private TestQuestionFragment testQuestionFragment;
 	private ArrayList<TestObject> testObjectList;
 	//private TestObject myTest;
 	
@@ -71,7 +72,14 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        /*
         if (id == R.id.action_settings) {
+            return true;
+        }
+        */
+        if (id == R.id.action_help) {
+        	//Toast.makeText(this, "app help", Toast.LENGTH_SHORT).show();
+        	openHelp();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -87,7 +95,7 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 			fragmentManager = getFragmentManager();
 		}
 		
-		TestQuestionFragment testQuestionFragment = new TestQuestionFragment();
+		testQuestionFragment = new TestQuestionFragment();
 		
 		Bundle arguments = new Bundle();
 		//myTest = testObjectList.get(index);
@@ -107,7 +115,24 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 		if(fragmentManager == null) {
 			fragmentManager = getFragmentManager();
 		}
+		if(mTestListFragment == null) {
+    		mTestListFragment = new TestListFragment();
+    	}
 		fragmentManager.beginTransaction().replace(R.id.fragmentContainer, mTestListFragment).commit();
 	}
+	
+	private void openHelp() {
+		openHelpDialog();
+	}
+
+	/**
+	 * 
+	 */
+	private void openHelpDialog() {
+		//TODO Flesh this method out
+    	DialogFragment dmHelp = new DialogFragment();
+    	dmHelp.show(getFragmentManager(), getResources().getString(R.string.action_help));
+    	
+    }
 
 }

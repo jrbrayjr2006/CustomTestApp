@@ -55,8 +55,8 @@ public class TestQuestionFragment extends Fragment {
 	private ImageView questionImageView;
 	long timeInMilliseconds = 0L;
 	long timeSwapBuff = 0L;
-	//long updatedTime10 = 600000;
-	long updatedTime10 = 10000;  //TODO for testing only, remove when ready to ship
+	long updatedTime10 = 600000;
+	//long updatedTime10 = 10000;  //TODO for testing only, remove when ready to ship
 	private int testIndex;
 	private int currentIndex;
 	
@@ -248,8 +248,8 @@ public class TestQuestionFragment extends Fragment {
 		    Drawable d = Drawable.createFromStream(ims, null);
 		    // set image to ImageView
 		    questionImageView.setImageDrawable(d);
-		    questionImageView.setMinimumWidth(900);
-		    questionImageView.setMinimumHeight(600);
+		    questionImageView.setMinimumWidth(1600);
+		    questionImageView.setMinimumHeight(1000);
 		}
 		catch(IOException ex) 
 		{
