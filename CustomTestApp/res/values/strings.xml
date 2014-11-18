@@ -9,6 +9,7 @@
     <string name="label_b">B</string>
     <string name="label_c">C</string>
     <string name="label_d">D</string>
+    <string name="label_e">E</string>
     <string name="label_solution">Solution</string>
     <string name="question">Question x/10</string>
     <string name="question_image">Question Image</string>

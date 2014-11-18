@@ -50,12 +50,13 @@ public class TestQuestionFragment extends Fragment {
 	private Button bButton;
 	private Button cButton;
 	private Button dButton;
+	private Button eButton;
 	private Button solutionButton;
 	private ImageView questionImageView;
 	long timeInMilliseconds = 0L;
 	long timeSwapBuff = 0L;
-	long updatedTime10 = 600000;
-	//long updatedTime10 = 10000;  //TODO for testing only, remove when ready to ship
+	//long updatedTime10 = 600000;
+	long updatedTime10 = 10000;  //TODO for testing only, remove when ready to ship
 	private int testIndex;
 	private int currentIndex;
 	
@@ -82,11 +83,12 @@ public class TestQuestionFragment extends Fragment {
 		bButton = (Button)v.findViewById(R.id.buttonB);
 		cButton = (Button)v.findViewById(R.id.buttonC);
 		dButton = (Button)v.findViewById(R.id.buttonD);
+		eButton = (Button)v.findViewById(R.id.buttonE);
 		questionImageView = (ImageView)v.findViewById(R.id.questionImageView);
 		solutionButton = (Button)v.findViewById(R.id.buttonSolution);
 		
 		testIndex = getArguments().getInt("index");
-		
+		//TODO BEGIN the following code is for testing only
 		myTest = new TestObject();
 		questions = new ArrayList<Question>();
 		currentIndex = 0;
@@ -98,6 +100,7 @@ public class TestQuestionFragment extends Fragment {
 			q.setSolution("D");  //TODO for development purposes only
 			questions.add(q);
 		}
+		//TODO END
 		
 		questionText.setText(questions.get(0).getQuestion() + "/10");
 		
@@ -157,6 +160,17 @@ public class TestQuestionFragment extends Fragment {
 			}
 			
 		});
+		eButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				defaultButtonTextColor();
+				updateCurrentQuestion("E");
+				updateButtonColor(eButton);
+			}
+			
+		});
 		
 		mDetector = new GestureDetectorCompat(getActivity(), new MyGestureListener());
 		
@@ -184,11 +198,13 @@ public class TestQuestionFragment extends Fragment {
 
 		     public void onFinish() {
 		    	 timerValue.setText("The time expired!");
+		    	 timerValue.setTextColor(getActivity().getResources().getColor(R.color.red));
 		    	 endTestButton.setText(getActivity().getResources().getString(R.string.see_results));
 		    	 aButton.setEnabled(false);
 		    	 bButton.setEnabled(false);
 		    	 cButton.setEnabled(false);
 		    	 dButton.setEnabled(false);
+		    	 eButton.setEnabled(false);
 		    	 solutionButton.setEnabled(true);
 		     }
 		  }.start();
@@ -208,6 +224,7 @@ public class TestQuestionFragment extends Fragment {
 		bButton.setTextColor(getActivity().getResources().getColor(R.color.black));
 		cButton.setTextColor(getActivity().getResources().getColor(R.color.black));
 		dButton.setTextColor(getActivity().getResources().getColor(R.color.black));
+		eButton.setTextColor(getActivity().getResources().getColor(R.color.black));
 	}
 	
 	private void updateButtonColor(Button targetButton) {
@@ -223,7 +240,7 @@ public class TestQuestionFragment extends Fragment {
 		{
 			int t = testIndex + 1;
 			int q = currentIndex + 1;
-			String imageName = "pictures/" + t + "-" + q + ".png";
+			String imageName = "pictures/" + t + "-" + q + ".jpg";
 			Log.d(DEBUG_TAG, imageName);
 		    // get input stream
 		    InputStream ims = getActivity().getAssets().open(imageName);
@@ -231,8 +248,8 @@ public class TestQuestionFragment extends Fragment {
 		    Drawable d = Drawable.createFromStream(ims, null);
 		    // set image to ImageView
 		    questionImageView.setImageDrawable(d);
-		    questionImageView.setMinimumWidth(480);
-		    questionImageView.setMinimumHeight(320);
+		    questionImageView.setMinimumWidth(900);
+		    questionImageView.setMinimumHeight(600);
 		}
 		catch(IOException ex) 
 		{
@@ -295,6 +312,9 @@ public class TestQuestionFragment extends Fragment {
             	}
             	if(opts.equals("D")) {
             		updateButtonColor(dButton);
+            	}
+            	if(opts.equals("E")) {
+            		updateButtonColor(eButton);
             	}
             }
             String questionTitle = "Question " + x + "/10";

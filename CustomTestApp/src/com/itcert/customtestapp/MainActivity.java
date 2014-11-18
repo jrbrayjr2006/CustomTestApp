@@ -10,7 +10,6 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.itcert.customtestapp.TestListFragment.OnTestSelectedListener;
 import com.itcert.customtestapp.TestQuestionFragment.OnTestListener;

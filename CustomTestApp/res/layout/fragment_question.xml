@@ -65,6 +65,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/label_d" />
+        
+        <Button
+            android:id="@+id/buttonE"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/label_e" />
 
         <Button
             android:id="@+id/buttonSolution"
@@ -93,7 +101,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/linearLayout1"
-        android:layout_marginLeft="57dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/endTestBtn"
         android:contentDescription="@string/question_image"
         android:src="@drawable/sample1" />
