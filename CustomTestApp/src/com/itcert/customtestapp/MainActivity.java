@@ -31,12 +31,13 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 	private FragmentManager fragmentManager;
 	private Fragment mTestListFragment;
 	private TestQuestionFragment testQuestionFragment;
-	private ArrayList<TestObject> testObjectList;
+	private List<TestObject> testObjectList;
 	//private TestObject myTest;
 	
 	private ArrayList<String> mTestList;
 	
-	private final String TAG = "MainActivity";
+	private final static String TAG = "MainActivity";
+	private final static int MAX_NUMBER_OF_QUESTIONS = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +45,7 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_main);
         
-        loadAndParseLocalXml();
+        testObjectList = loadAndParseLocalXml();
         
         fragmentManager = getFragmentManager();
         mTestListFragment = fragmentManager.findFragmentById(R.id.test_list_fragment);
@@ -58,17 +59,17 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
         
         mTestList = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.tests)));
         
-        // initialize tests
+        /* initialize tests
         testObjectList = new ArrayList<TestObject>();
         int i = 0;
-        // populate test list
+        //-- populate test list
         for(String _testTitle : mTestList) {
         	TestObject to = new TestObject();
         	i++;
         	to.setTestTitle(_testTitle);
         	to.setIndex(i);
         	testObjectList.add(to);
-        }
+        }*/
     }
 
 
@@ -148,7 +149,7 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
     	
     }
 	
-	protected void loadAndParseLocalXml() {
+	protected List<TestObject> loadAndParseLocalXml() {
 		Log.d(TAG, "loadAndParseLocalXml");
 		//boolean flag = false;
 		List<TestObject> tests = new ArrayList<TestObject>();
@@ -172,10 +173,12 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 						Log.d(TAG, "Title of the test is " + configXml.getAttributeValue(1));
 						to.setTestTitle(configXml.getAttributeValue(1));
 						// iterate through questions
-						for(int i = 0; i < 10; i++) {
+						for(int i = 0; i < MAX_NUMBER_OF_QUESTIONS; i++) {
 							configXml.next();
 							if((configXml.getName() != null) && (configXml.getName().equals("question"))) {
 								String _solution =  configXml.getAttributeValue(1);
+								String strIndex = configXml.getAttributeValue(0);
+								int _index = Integer.parseInt(strIndex);
 								Question myQ = new Question();
 								configXml.next();
 								if(configXml.getName().equals("question_text")) {
@@ -208,8 +211,17 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 									configXml.next();
 									String optE = configXml.getText().toString();
 									Log.d(TAG, "The options are: " + optA + ", " + optB + ", " + optC + ", " + optD + ", " + optE);
+									ArrayList<String> questionOptions = new ArrayList<String>();
+									questionOptions.add(optA);
+									questionOptions.add(optB);
+									questionOptions.add(optC);
+									questionOptions.add(optD);
+									questionOptions.add(optE);
+									
+									myQ.setQuestionOptions(questionOptions);
 									myQ.setQuestion(_questionText);
 									myQ.setSolution(_solution); 
+									myQ.setQuestionNumber(_index);
 									Log.d(TAG, "The solution is: " + _solution);
 									configXml.next();
 									configXml.next();
@@ -217,7 +229,7 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 								questions.add(myQ);
 							}
 						}
-						
+						to.setQuestions(questions);
 						tests.add(to);
 					} 
 				}
@@ -237,6 +249,7 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return tests;
 	}
 
 }
