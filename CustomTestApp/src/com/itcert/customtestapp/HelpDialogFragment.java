@@ -27,6 +27,7 @@ public class HelpDialogFragment extends DialogFragment {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle(getActivity().getResources().getString(R.string.action_help));
 		builder.setMessage(generateHelpText());
+		builder.setPositiveButton(getActivity().getResources().getString(R.string.close_label), null);
 		return builder.create();
 	}
 	
