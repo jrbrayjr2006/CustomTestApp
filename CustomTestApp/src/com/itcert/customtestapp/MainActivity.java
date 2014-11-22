@@ -138,7 +138,7 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 	 */
 	private void openHelpDialog() {
 		//TODO Flesh this method out
-    	DialogFragment dmHelp = new DialogFragment();
+    	DialogFragment dmHelp = new HelpDialogFragment();
     	dmHelp.show(getFragmentManager(), getResources().getString(R.string.action_help));
     	
     }

@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.itcert.customtestapp.model.Question;
 import com.itcert.customtestapp.model.TestObject;
@@ -47,7 +48,7 @@ public class TestQuestionFragment extends Fragment {
 	private GestureDetectorCompat mDetector; 
 	private TestObject myTest;
 	private TestObject selectedTest;
-	List<Question> questions;
+	//List<Question> questions;
 	
 	private TextView timerValue;
 	private TextView questionText;
@@ -61,8 +62,8 @@ public class TestQuestionFragment extends Fragment {
 	private ImageView questionImageView;
 	long timeInMilliseconds = 0L;
 	long timeSwapBuff = 0L;
-	long updatedTime10 = 600000;
-	//long updatedTime10 = 10000;  //TODO for testing only, remove when ready to ship
+	//long updatedTime10 = 600000;
+	long updatedTime10 = 10000;  //TODO for testing only, remove when ready to ship
 	private int testIndex;
 	private int currentIndex;
 	
@@ -98,12 +99,12 @@ public class TestQuestionFragment extends Fragment {
 		testIndex = getArguments().getInt("index");
 		//TODO BEGIN the following code is for testing only
 		myTest = selectedTest; // = new TestObject();
-		questions = selectedTest.getQuestions(); // = new ArrayList<Question>();
+		//questions = selectedTest.getQuestions(); // = new ArrayList<Question>();
 		currentIndex = 0;
 		
-		questionText.setText("Question " + questions.get(0).getQuestion() + " " +  questions.get(0).getQuestionNumber() + "/10");
+		questionText.setText("Question " + selectedTest.getQuestions().get(0).getQuestionNumber() + "/10");
 		
-		myTest.setQuestions(questions);
+		myTest.setQuestions(selectedTest.getQuestions());
 		
 		endTestButton.setOnClickListener(new OnClickListener() {
 
@@ -170,6 +171,13 @@ public class TestQuestionFragment extends Fragment {
 			}
 			
 		});
+		solutionButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Toast.makeText(getActivity(), "Solution!", Toast.LENGTH_SHORT).show();
+			}});
 		
 		mDetector = new GestureDetectorCompat(getActivity(), new MyGestureListener());
 		
@@ -231,7 +239,7 @@ public class TestQuestionFragment extends Fragment {
 	}
 	
 	private void updateCurrentQuestion(String _selectedOption) {
-		questions.get(currentIndex).setSelectedOption(_selectedOption);
+		selectedTest.getQuestions().get(currentIndex).setSelectedOption(_selectedOption);
 	}
 	
 	private void updateImage() {
@@ -298,7 +306,7 @@ public class TestQuestionFragment extends Fragment {
             }
             currentIndex = x - 1;
             updateImage();
-            String opts = questions.get(currentIndex).getSelectedOption();
+            String opts = selectedTest.getQuestions().get(currentIndex).getSelectedOption();
             if(opts != null) {
             	if(opts.equals("A")) {
             		updateButtonColor(aButton);
