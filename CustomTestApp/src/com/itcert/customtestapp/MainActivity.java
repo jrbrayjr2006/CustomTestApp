@@ -15,7 +15,6 @@ import android.app.FragmentManager;
 import android.content.pm.ActivityInfo;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,9 +32,6 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 	private Fragment mTestListFragment;
 	private TestQuestionFragment testQuestionFragment;
 	private ArrayList<TestObject> testObjectList;
-	//private TestObject myTest;
-	
-	private ArrayList<String> mTestList;
 	
 	private final static String TAG = "MainActivity";
 	public final static String TESTS = "tests";
@@ -59,8 +55,6 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
         	}
         	fragmentManager.beginTransaction().add(R.id.fragmentContainer, mTestListFragment).commit();
         }
-        
-        mTestList = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.tests)));
         
     }
 

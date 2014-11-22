@@ -5,7 +5,6 @@ package com.itcert.customtestapp;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -13,20 +12,17 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Intent;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.itcert.customtestapp.adapter.TestListAdapter;
 import com.itcert.customtestapp.model.Question;
 import com.itcert.customtestapp.model.TestObject;
 
@@ -38,7 +34,8 @@ public class TestListFragment extends Fragment {
 	
 	private ListView mTestListView;
 	
-	private ArrayAdapter<String> mArrayAdapter;
+	//private ArrayAdapter<String> mArrayAdapter;
+	private TestListAdapter mTestListAdapter;
 	private ArrayList<String> mTestList;
 	
 	private ArrayList<TestObject> testObjects;
@@ -68,15 +65,13 @@ public class TestListFragment extends Fragment {
 		//load the data from the config.xml into TestObjects
 		testObjects = loadAndParseLocalXml();
 		
-		int layoutID = android.R.layout.simple_list_item_1;
-		
 		mTestList = new ArrayList<String>();
 		for(TestObject to : testObjects) {
 			mTestList.add(to.getTestTitle());
 		}
 		
-		mArrayAdapter = new ArrayAdapter<String>(getActivity(), layoutID, mTestList);
-		mTestListView.setAdapter(mArrayAdapter);
+		mTestListAdapter = new TestListAdapter(getActivity(), testObjects);
+		mTestListView.setAdapter(mTestListAdapter);
 		
 		mTestListView.setOnItemClickListener(new OnItemClickListener() {
 

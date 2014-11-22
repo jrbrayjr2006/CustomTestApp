@@ -6,8 +6,6 @@ package com.itcert.customtestapp.model;
 import java.io.Serializable;
 import java.util.List;
 
-import android.os.Parcel;
-
 /**
  * @author james_r_bray
  *

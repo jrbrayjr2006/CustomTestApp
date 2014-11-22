@@ -5,7 +5,6 @@ package com.itcert.customtestapp;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -62,8 +61,8 @@ public class TestQuestionFragment extends Fragment {
 	private ImageView questionImageView;
 	long timeInMilliseconds = 0L;
 	long timeSwapBuff = 0L;
-	//long updatedTime10 = 600000;
-	long updatedTime10 = 10000;  //TODO for testing only, remove when ready to ship
+	long updatedTime10 = 600000;
+	//long updatedTime10 = 10000;  //TODO for testing only, remove when ready to ship
 	private int testIndex;
 	private int currentIndex;
 	
