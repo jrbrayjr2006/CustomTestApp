@@ -7,8 +7,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.res.XmlResourceParser;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -35,6 +39,7 @@ import com.itcert.customtestapp.model.TestObject;
 public class TestQuestionFragment extends Fragment {
 	
 	private static final String DEBUG_TAG = "Gestures";
+	private static final String TAG = "TestQuestionFragment";
 	
 	private static final int MAX_NUM_QUESTIONS = 10;
 	private static final int MIN_NUM_QUESTIONS = 1;
@@ -322,6 +327,42 @@ public class TestQuestionFragment extends Fragment {
             return true;
         }
     }
-
+	
+	protected void loadAndParseLocalXml() {
+		Log.d(TAG, "loadAndParseLocalXml");
+		XmlResourceParser configXml = getActivity().getResources().getXml(R.xml.config);
+		try {
+			Log.d(TAG, "Start parsing XML...");
+			int eventType = configXml.getEventType();
+			while(eventType != XmlPullParser.END_DOCUMENT) {
+				Log.d(TAG, "In while loop...");
+				if(eventType == XmlPullParser.START_DOCUMENT) {
+					
+				}
+				if(eventType == XmlPullParser.START_TAG) {
+					String element = configXml.getName();
+					Log.d(TAG, "XML element is " + element);
+					if(element.equals("question_text")) {
+						configXml.next();
+						Question q = new Question();
+						q.setQuestion(configXml.getText().toString());
+						Log.d(TAG, "Value of the question is " + configXml.getText());
+					}
+				}
+				if(eventType == XmlPullParser.END_TAG) {
+					
+				}
+				configXml.next();
+				//Log.d(TAG, "Value of the element is " + configXml.getText());
+				eventType = configXml.getEventType();
+			}
+		} catch (XmlPullParserException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 }
