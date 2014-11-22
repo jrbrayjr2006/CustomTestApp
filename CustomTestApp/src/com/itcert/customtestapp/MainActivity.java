@@ -15,6 +15,7 @@ import android.app.FragmentManager;
 import android.content.pm.ActivityInfo;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,12 +32,14 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 	private FragmentManager fragmentManager;
 	private Fragment mTestListFragment;
 	private TestQuestionFragment testQuestionFragment;
-	private List<TestObject> testObjectList;
+	private ArrayList<TestObject> testObjectList;
 	//private TestObject myTest;
 	
 	private ArrayList<String> mTestList;
 	
 	private final static String TAG = "MainActivity";
+	public final static String TESTS = "tests";
+	public final static String TEST = "test";
 	private final static int MAX_NUMBER_OF_QUESTIONS = 10;
 
     @Override
@@ -59,17 +62,6 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
         
         mTestList = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.tests)));
         
-        /* initialize tests
-        testObjectList = new ArrayList<TestObject>();
-        int i = 0;
-        //-- populate test list
-        for(String _testTitle : mTestList) {
-        	TestObject to = new TestObject();
-        	i++;
-        	to.setTestTitle(_testTitle);
-        	to.setIndex(i);
-        	testObjectList.add(to);
-        }*/
     }
 
 
@@ -115,7 +107,9 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 		//myTest = testObjectList.get(index);
 		//arguments.putCharSequence("title", myTest.getTestTitle());
 		//arguments.putInt("index", myTest.getIndex());
+		TestObject to = testObjectList.get(index);
 		arguments.putInt("index", index);
+		arguments.putSerializable(TEST, to);
 		testQuestionFragment.setArguments(arguments);
 		
 		fragmentManager.beginTransaction().replace(R.id.fragmentContainer, testQuestionFragment).commit();
@@ -149,10 +143,10 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
     	
     }
 	
-	protected List<TestObject> loadAndParseLocalXml() {
+	public ArrayList<TestObject> loadAndParseLocalXml() {
 		Log.d(TAG, "loadAndParseLocalXml");
 		//boolean flag = false;
-		List<TestObject> tests = new ArrayList<TestObject>();
+		ArrayList<TestObject> tests = new ArrayList<TestObject>();
 		XmlResourceParser configXml = getResources().getXml(R.xml.config);
 		try {
 			Log.d(TAG, "Start parsing XML...");

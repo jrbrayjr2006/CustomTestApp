@@ -5,7 +5,7 @@ package com.itcert.customtestapp;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.util.List;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -46,7 +46,8 @@ public class TestQuestionFragment extends Fragment {
 	
 	private GestureDetectorCompat mDetector; 
 	private TestObject myTest;
-	ArrayList<Question> questions;
+	private TestObject selectedTest;
+	List<Question> questions;
 	
 	private TextView timerValue;
 	private TextView questionText;
@@ -92,22 +93,15 @@ public class TestQuestionFragment extends Fragment {
 		questionImageView = (ImageView)v.findViewById(R.id.questionImageView);
 		solutionButton = (Button)v.findViewById(R.id.buttonSolution);
 		
+		selectedTest = (TestObject)getArguments().getSerializable(MainActivity.TEST);
+		
 		testIndex = getArguments().getInt("index");
 		//TODO BEGIN the following code is for testing only
-		myTest = new TestObject();
-		questions = new ArrayList<Question>();
+		myTest = selectedTest; // = new TestObject();
+		questions = selectedTest.getQuestions(); // = new ArrayList<Question>();
 		currentIndex = 0;
 		
-		for(int x = 1; x <= 10;x++ ) {
-			Question q = new Question();
-			q.setQuestion("Question " + x);
-			q.setQuestionNumber(x);
-			q.setSolution("D");  //TODO for development purposes only
-			questions.add(q);
-		}
-		//TODO END
-		
-		questionText.setText(questions.get(0).getQuestion() + "/10");
+		questionText.setText("Question " + questions.get(0).getQuestion() + " " +  questions.get(0).getQuestionNumber() + "/10");
 		
 		myTest.setQuestions(questions);
 		

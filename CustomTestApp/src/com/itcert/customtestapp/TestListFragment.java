@@ -13,8 +13,11 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +41,8 @@ public class TestListFragment extends Fragment {
 	private ArrayAdapter<String> mArrayAdapter;
 	private ArrayList<String> mTestList;
 	
+	private ArrayList<TestObject> testObjects;
+	
 	public interface OnTestSelectedListener {
 		public void onTestSelected(int index);
 	}
@@ -46,20 +51,30 @@ public class TestListFragment extends Fragment {
 	
 	private final String ERROR = "TestListFragment Error";
 	private final String TAG = "TestListFragment";
+	private final static int MAX_NUMBER_OF_QUESTIONS = 10;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
 	
-	
+	/**
+	 * 
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup root, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_question_list, root, false);
 		
 		mTestListView = (ListView)v.findViewById(R.id.questionsListView);
+		//load the data from the config.xml into TestObjects
+		testObjects = loadAndParseLocalXml();
 		
 		int layoutID = android.R.layout.simple_list_item_1;
-		mTestList = new ArrayList<String>(Arrays.asList(getActivity().getResources().getStringArray(R.array.tests)));
+		
+		mTestList = new ArrayList<String>();
+		for(TestObject to : testObjects) {
+			mTestList.add(to.getTestTitle());
+		}
+		
 		mArrayAdapter = new ArrayAdapter<String>(getActivity(), layoutID, mTestList);
 		mTestListView.setAdapter(mArrayAdapter);
 		
@@ -68,7 +83,6 @@ public class TestListFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				//loadAndParseLocalXml() ;
 				mListener.onTestSelected(position);
 				Log.d(TAG, mTestList.get(position));
 				//Toast.makeText(getActivity(), mTestList.get(position), Toast.LENGTH_SHORT).show();
@@ -89,10 +103,10 @@ public class TestListFragment extends Fragment {
 		}
 	}
 	
-	protected void loadAndParseLocalXml() {
+	public ArrayList<TestObject> loadAndParseLocalXml() {
 		Log.d(TAG, "loadAndParseLocalXml");
 		//boolean flag = false;
-		List<TestObject> tests = new ArrayList<TestObject>();
+		ArrayList<TestObject> tests = new ArrayList<TestObject>();
 		XmlResourceParser configXml = getActivity().getResources().getXml(R.xml.config);
 		try {
 			Log.d(TAG, "Start parsing XML...");
@@ -113,10 +127,12 @@ public class TestListFragment extends Fragment {
 						Log.d(TAG, "Title of the test is " + configXml.getAttributeValue(1));
 						to.setTestTitle(configXml.getAttributeValue(1));
 						// iterate through questions
-						for(int i = 0; i < 10; i++) {
+						for(int i = 0; i < MAX_NUMBER_OF_QUESTIONS; i++) {
 							configXml.next();
 							if((configXml.getName() != null) && (configXml.getName().equals("question"))) {
 								String _solution =  configXml.getAttributeValue(1);
+								String strIndex = configXml.getAttributeValue(0);
+								int _index = Integer.parseInt(strIndex);
 								Question myQ = new Question();
 								configXml.next();
 								if(configXml.getName().equals("question_text")) {
@@ -149,8 +165,17 @@ public class TestListFragment extends Fragment {
 									configXml.next();
 									String optE = configXml.getText().toString();
 									Log.d(TAG, "The options are: " + optA + ", " + optB + ", " + optC + ", " + optD + ", " + optE);
+									ArrayList<String> questionOptions = new ArrayList<String>();
+									questionOptions.add(optA);
+									questionOptions.add(optB);
+									questionOptions.add(optC);
+									questionOptions.add(optD);
+									questionOptions.add(optE);
+									
+									myQ.setQuestionOptions(questionOptions);
 									myQ.setQuestion(_questionText);
 									myQ.setSolution(_solution); 
+									myQ.setQuestionNumber(_index);
 									Log.d(TAG, "The solution is: " + _solution);
 									configXml.next();
 									configXml.next();
@@ -158,7 +183,7 @@ public class TestListFragment extends Fragment {
 								questions.add(myQ);
 							}
 						}
-						
+						to.setQuestions(questions);
 						tests.add(to);
 					} 
 				}
@@ -178,6 +203,7 @@ public class TestListFragment extends Fragment {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return tests;
 	}
 
 }
