@@ -3,13 +3,19 @@
  */
 package com.itcert.customtestapp.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * @author james_r_bray
  *
  */
-public class Question {
+public class Question implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1335873979606351992L;
 	
 	private ArrayList<String> questionOptions;
 	private String question;
