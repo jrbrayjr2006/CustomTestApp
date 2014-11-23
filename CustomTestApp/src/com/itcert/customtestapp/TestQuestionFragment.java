@@ -5,6 +5,7 @@ package com.itcert.customtestapp;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -29,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.itcert.customtestapp.helper.QuestionEnum;
 import com.itcert.customtestapp.model.Question;
 import com.itcert.customtestapp.model.TestObject;
 
@@ -43,6 +45,11 @@ public class TestQuestionFragment extends Fragment {
 	
 	private static final int MAX_NUM_QUESTIONS = 10;
 	private static final int MIN_NUM_QUESTIONS = 1;
+	
+	/**
+	 * Flag to determine if the test has been completed.
+	 */
+	private boolean testCompleted = false;
 	
 	private GestureDetectorCompat mDetector; 
 	private TestObject myTest;
@@ -61,8 +68,8 @@ public class TestQuestionFragment extends Fragment {
 	private ImageView questionImageView;
 	long timeInMilliseconds = 0L;
 	long timeSwapBuff = 0L;
-	long updatedTime10 = 600000;
-	//long updatedTime10 = 10000;  //TODO for testing only, remove when ready to ship
+	//long updatedTime10 = 600000;
+	long updatedTime10 = 10000;  //TODO for testing only, remove when ready to ship
 	private int testIndex;
 	private int currentIndex;
 	
@@ -211,6 +218,7 @@ public class TestQuestionFragment extends Fragment {
 		    	 cButton.setEnabled(false);
 		    	 dButton.setEnabled(false);
 		    	 eButton.setEnabled(false);
+		    	 testCompleted = true;
 		    	 solutionButton.setEnabled(true);
 		     }
 		  }.start();
@@ -235,6 +243,10 @@ public class TestQuestionFragment extends Fragment {
 	
 	private void updateButtonColor(Button targetButton) {
 		targetButton.setTextColor(getActivity().getResources().getColor(R.color.green));
+	}
+	
+	private void highlightIncorrectAnswersByColor(Button targetButton) {
+		targetButton.setTextColor(getActivity().getResources().getColor(R.color.red));
 	}
 	
 	private void updateCurrentQuestion(String _selectedOption) {
@@ -321,6 +333,36 @@ public class TestQuestionFragment extends Fragment {
             	}
             	if(opts.equals("E")) {
             		updateButtonColor(eButton);
+            	}
+            	if(testCompleted) {
+            		if(!opts.equals(selectedTest.getQuestions().get(currentIndex).getSolution())) {
+            			String message = opts + " is incorrect.  The correct answer is " + selectedTest.getQuestions().get(currentIndex).getSolution();
+            			switch(QuestionEnum.get(opts.toUpperCase(Locale.US))) {
+            			case A:
+            				highlightIncorrectAnswersByColor(aButton);
+            				break;
+            			case B:
+            				highlightIncorrectAnswersByColor(bButton);
+            				break;
+            			case C:
+            				highlightIncorrectAnswersByColor(cButton);
+            				break;
+            			case D:
+            				highlightIncorrectAnswersByColor(dButton);
+            				break;
+            			case E:
+            				highlightIncorrectAnswersByColor(eButton);
+            				break;
+            			case Z:
+            				break;
+            			}
+            			Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+            		}
+            	}
+            } else {
+            	if(testCompleted) {
+            		String message = " You did not answer this question.  The correct answer is " + selectedTest.getQuestions().get(currentIndex).getSolution();
+        			Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
             	}
             }
             String questionTitle = "Question " + x + "/10";
