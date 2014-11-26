@@ -72,6 +72,7 @@ public class TestQuestionFragment extends Fragment {
 	long updatedTime10 = 10000;  //TODO for testing only, remove when ready to ship
 	private int testIndex;
 	private int currentIndex;
+	private CountDownTimer timer;
 	
 	public interface OnTestListener {
 		public void onEndTestClick();
@@ -116,6 +117,7 @@ public class TestQuestionFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
+				clearAndResetTests();
 				mCallback.onEndTestClick();
 				
 			}
@@ -200,7 +202,7 @@ public class TestQuestionFragment extends Fragment {
 			
 		});
 		
-		new CountDownTimer(updatedTime10, 1000) {
+		timer = new CountDownTimer(updatedTime10, 1000) {
 
 		     public void onTick(long millisUntilFinished) {
 		    	 int secs = (int) (millisUntilFinished / 1000);
@@ -273,6 +275,16 @@ public class TestQuestionFragment extends Fragment {
 		{
 		    return;
 		}
+	}
+	
+	/**
+	 * Clear all data from tests and reset them for the next test
+	 */
+	private void clearAndResetTests() {
+		defaultButtonTextColor();
+		selectedTest = null;
+		selectedTest = new TestObject();
+		timer.cancel();
 	}
 
 	/**
