@@ -52,7 +52,7 @@ public class TestQuestionFragment extends Fragment {
 	private boolean testCompleted = false;
 	
 	private GestureDetectorCompat mDetector; 
-	private TestObject myTest;
+	//private TestObject myTest;
 	private TestObject selectedTest;
 	//List<Question> questions;
 	
@@ -68,8 +68,8 @@ public class TestQuestionFragment extends Fragment {
 	private ImageView questionImageView;
 	long timeInMilliseconds = 0L;
 	long timeSwapBuff = 0L;
-	//long updatedTime10 = 600000;
-	long updatedTime10 = 10000;  //TODO for testing only, remove when ready to ship
+	long updatedTime10 = 600000;
+	//long updatedTime10 = 10000;  //TODO for testing only, remove when ready to ship
 	private int testIndex;
 	private int currentIndex;
 	private CountDownTimer timer;
@@ -105,13 +105,13 @@ public class TestQuestionFragment extends Fragment {
 		
 		testIndex = getArguments().getInt("index");
 		//TODO BEGIN the following code is for testing only
-		myTest = selectedTest; // = new TestObject();
+		//myTest = selectedTest; // = new TestObject();
 		//questions = selectedTest.getQuestions(); // = new ArrayList<Question>();
 		currentIndex = 0;
 		
 		questionText.setText("Question " + selectedTest.getQuestions().get(0).getQuestionNumber() + "/10");
-		
-		myTest.setQuestions(selectedTest.getQuestions());
+		// was using myTest here 11-28-2014
+		selectedTest.setQuestions(selectedTest.getQuestions());
 		
 		endTestButton.setOnClickListener(new OnClickListener() {
 
@@ -282,8 +282,11 @@ public class TestQuestionFragment extends Fragment {
 	 */
 	private void clearAndResetTests() {
 		defaultButtonTextColor();
+		//reset all question selectedOption properties to null
+		for(Question q : selectedTest.getQuestions()) {
+			q.setSelectedOption(null);
+		}
 		selectedTest = null;
-		selectedTest = new TestObject();
 		timer.cancel();
 	}
 

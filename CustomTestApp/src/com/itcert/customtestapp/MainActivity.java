@@ -82,6 +82,9 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
         	openHelp();
             return true;
         }
+        if (id == R.id.action_quit) {
+        	quitApp(this);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -125,6 +128,10 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 	
 	private void openHelp() {
 		openHelpDialog();
+	}
+	
+	private void quitApp(Activity activity) {
+		activity.finish();
 	}
 
 	/**
