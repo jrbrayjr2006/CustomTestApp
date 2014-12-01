@@ -248,6 +248,10 @@ public class TestQuestionFragment extends Fragment {
 		targetButton.setTextColor(getActivity().getResources().getColor(R.color.red));
 	}
 	
+	private void highlightCorrectAnswerByColorAtEndOfTest(Button targetButton) {
+		targetButton.setTextColor(getActivity().getResources().getColor(R.color.blue));
+	}
+	
 	private void updateCurrentQuestion(String _selectedOption) {
 		selectedTest.getQuestions().get(currentIndex).setSelectedOption(_selectedOption);
 	}
@@ -369,11 +373,51 @@ public class TestQuestionFragment extends Fragment {
             			case Z:
             				break;
             			}
+            			// highlight the correct answer
+            			switch(QuestionEnum.get(selectedTest.getQuestions().get(currentIndex).getSolution().toUpperCase(Locale.US))) {
+            			case A:
+            				highlightCorrectAnswerByColorAtEndOfTest(aButton);
+            				break;
+            			case B:
+            				highlightCorrectAnswerByColorAtEndOfTest(bButton);
+            				break;
+            			case C:
+            				highlightCorrectAnswerByColorAtEndOfTest(cButton);
+            				break;
+            			case D:
+            				highlightCorrectAnswerByColorAtEndOfTest(dButton);
+            				break;
+            			case E:
+            				highlightCorrectAnswerByColorAtEndOfTest(eButton);
+            				break;
+            			case Z:
+            				break;
+            			}
             			Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
             		}
             	}
             } else {
             	if(testCompleted) {
+            		// highlight the correct answer
+        			switch(QuestionEnum.get(selectedTest.getQuestions().get(currentIndex).getSolution().toUpperCase(Locale.US))) {
+        			case A:
+        				highlightCorrectAnswerByColorAtEndOfTest(aButton);
+        				break;
+        			case B:
+        				highlightCorrectAnswerByColorAtEndOfTest(bButton);
+        				break;
+        			case C:
+        				highlightCorrectAnswerByColorAtEndOfTest(cButton);
+        				break;
+        			case D:
+        				highlightCorrectAnswerByColorAtEndOfTest(dButton);
+        				break;
+        			case E:
+        				highlightCorrectAnswerByColorAtEndOfTest(eButton);
+        				break;
+        			case Z:
+        				break;
+        			}
             		String message = " You did not answer this question.  The correct answer is " + selectedTest.getQuestions().get(currentIndex).getSolution();
         			Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
             	}
