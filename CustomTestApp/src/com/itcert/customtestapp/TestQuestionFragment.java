@@ -249,7 +249,7 @@ public class TestQuestionFragment extends Fragment {
 	}
 	
 	private void highlightCorrectAnswerByColorAtEndOfTest(Button targetButton) {
-		targetButton.setTextColor(getActivity().getResources().getColor(R.color.blue));
+		targetButton.setTextColor(getActivity().getResources().getColor(R.color.violet));
 	}
 	
 	private void updateCurrentQuestion(String _selectedOption) {
