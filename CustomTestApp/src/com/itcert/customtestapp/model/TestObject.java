@@ -14,6 +14,7 @@ public class TestObject implements Serializable {
 	
 	private static final long serialVersionUID = 3504698616482509143L;
 	
+	private String testID;
 	private String testTitle;
 	private List<Question> questions;
 	private int index;
@@ -23,6 +24,14 @@ public class TestObject implements Serializable {
 	 */
 	public TestObject() {
 		// TODO Auto-generated constructor stub
+	}
+
+	public String getTestID() {
+		return testID;
+	}
+
+	public void setTestID(String testID) {
+		this.testID = testID;
 	}
 
 	public String getTestTitle() {

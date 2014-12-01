@@ -44,7 +44,11 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_main);
         
+        // Populate the test data from the config.xml file
         testObjectList = loadAndParseLocalXml();
+        
+        //TODO populate the solution text from the solutions.xml file
+        loadAndParseSolutionsXml(testObjectList);
         
         fragmentManager = getFragmentManager();
         mTestListFragment = fragmentManager.findFragmentById(R.id.test_list_fragment);
@@ -72,11 +76,6 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        /*
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        */
         if (id == R.id.action_help) {
         	//Toast.makeText(this, "app help", Toast.LENGTH_SHORT).show();
         	openHelp();
@@ -126,6 +125,12 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 		fragmentManager.beginTransaction().replace(R.id.fragmentContainer, mTestListFragment).commit();
 	}
 	
+	@Override
+	public void onShowSoluton(String _solutionText) {
+		// TODO Auto-generated method stub
+		openSolutionDialog(_solutionText);
+	}
+	
 	private void openHelp() {
 		openHelpDialog();
 	}
@@ -144,9 +149,19 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
     	
     }
 	
-	public ArrayList<TestObject> loadAndParseLocalXml() {
+	private void openSolutionDialog(String _solutionText) {
+		DialogFragment dmSolution = new SolutionDialogFragment(_solutionText);
+		dmSolution.show(getFragmentManager(), _solutionText);
+	}
+	
+	/**
+	 * <pre>
+	 * Populate the list of TestObjects from data in the config.xml file
+	 * </pre>
+	 * @return
+	 */
+	private ArrayList<TestObject> loadAndParseLocalXml() {
 		Log.d(TAG, "loadAndParseLocalXml");
-		//boolean flag = false;
 		ArrayList<TestObject> tests = new ArrayList<TestObject>();
 		XmlResourceParser configXml = getResources().getXml(R.xml.config);
 		try {
@@ -161,11 +176,11 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 					String element = configXml.getName();
 					Log.d(TAG, "XML element is " + element);
 					if(element.equals("test")) {
-						//configXml.next();
 						TestObject to = new TestObject();
 						List<Question> questions = new ArrayList<Question>();
 						Log.d(TAG, "ID of the test is " + configXml.getAttributeValue(0));
 						Log.d(TAG, "Title of the test is " + configXml.getAttributeValue(1));
+						to.setTestID(configXml.getAttributeValue(0));
 						to.setTestTitle(configXml.getAttributeValue(1));
 						// iterate through questions
 						for(int i = 0; i < MAX_NUMBER_OF_QUESTIONS; i++) {
@@ -238,13 +253,78 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 				eventType = configXml.getEventType();
 			}
 		} catch (XmlPullParserException e) {
-			// TODO Auto-generated catch block
+			Log.e(TAG, e.getMessage());
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			Log.e(TAG, e.getMessage());
 			e.printStackTrace();
 		}
 		return tests;
+	}
+	
+	/**
+	 * Read the solutions XML file and populate the solutions with
+	 */
+	protected void loadAndParseSolutionsXml(ArrayList<TestObject> _tests) {
+		Log.d(TAG, "loadAndParseSolutionsXml");
+		XmlResourceParser solutionsXml = getResources().getXml(R.xml.solutions);
+		//String testID = "";
+		int _testIndex = 0;
+		try {
+			Log.d(TAG, "Start parsing XML...");
+			int eventType = solutionsXml.getEventType();
+			while(eventType != XmlPullParser.END_DOCUMENT) {
+				if(eventType == XmlPullParser.START_TAG) {
+					String element = solutionsXml.getName();
+					Log.d(TAG, "XML element is " + element);
+					if(element.equals("test")) {
+						//TestObject to = new TestObject();  //TODO CHANGE THIS
+						//List<Question> questions = new ArrayList<Question>();
+						//testID = solutionsXml.getAttributeValue(0);
+						Log.d(TAG, "ID of the test is " + solutionsXml.getAttributeValue(0));
+						Log.d(TAG, "Title of the test is " + solutionsXml.getAttributeValue(1));
+						/*
+						for(TestObject t : _tests) {
+							if(t.getTestID().equals(testID)) {
+								//TODO populate test solution text
+								for(Question q : t.getQuestions()) {
+									q.setSolutionText("Test solution text for " + testID + " question " + q.getQuestionNumber());
+								}
+							}
+						}
+						*/
+						for(int i = 0; i < MAX_NUMBER_OF_QUESTIONS; i++) { 
+							solutionsXml.next();
+							if((solutionsXml.getName() != null) && (solutionsXml.getName().equals("question"))) {
+								//String _solution =  solutionsXml.getAttributeValue(1);
+								String _strIndex = solutionsXml.getAttributeValue(0);
+								int _index = Integer.parseInt(_strIndex) - 1;
+								
+								solutionsXml.next();  // go to node after question node
+								String _solutionText = solutionsXml.getText().toString();
+								//TODO add logic to add solution to test objects
+								testObjectList.get(_testIndex).getQuestions().get(_index).setSolutionText(_solutionText);
+								Log.d(TAG, "The solution text is: " + _solutionText);
+								solutionsXml.next();
+							}
+						}
+						solutionsXml.next();
+						Log.d(TAG, "The current text index is " + _testIndex);
+						_testIndex++;
+					}
+				}
+				if(eventType != XmlPullParser.END_DOCUMENT) {
+					solutionsXml.next();  //comment out if necessary
+				}
+				eventType = solutionsXml.getEventType();
+			}
+		} catch (XmlPullParserException e) {
+			Log.e(TAG, e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			Log.e(TAG, e.getMessage());
+			e.printStackTrace();
+		}
 	}
 
 }

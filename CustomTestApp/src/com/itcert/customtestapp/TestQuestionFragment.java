@@ -7,12 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.res.XmlResourceParser;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -68,14 +64,16 @@ public class TestQuestionFragment extends Fragment {
 	private ImageView questionImageView;
 	long timeInMilliseconds = 0L;
 	long timeSwapBuff = 0L;
-	long updatedTime10 = 600000;
-	//long updatedTime10 = 10000;  //TODO for testing only, remove when ready to ship
+	//long updatedTime10 = 600000;
+	long updatedTime10 = 10000;  //TODO for testing only, remove when ready to ship
 	private int testIndex;
 	private int currentIndex;
 	private CountDownTimer timer;
 	
 	public interface OnTestListener {
 		public void onEndTestClick();
+		
+		public void onShowSoluton(String _solutionText);
 	}
 	
 	OnTestListener mCallback;
@@ -104,9 +102,6 @@ public class TestQuestionFragment extends Fragment {
 		selectedTest = (TestObject)getArguments().getSerializable(MainActivity.TEST);
 		
 		testIndex = getArguments().getInt("index");
-		//TODO BEGIN the following code is for testing only
-		//myTest = selectedTest; // = new TestObject();
-		//questions = selectedTest.getQuestions(); // = new ArrayList<Question>();
 		currentIndex = 0;
 		
 		questionText.setText("Question " + selectedTest.getQuestions().get(0).getQuestionNumber() + "/10");
@@ -183,8 +178,10 @@ public class TestQuestionFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Toast.makeText(getActivity(), "Solution!", Toast.LENGTH_SHORT).show();
+				// TODO Show the solution for the current question
+				String _solutionText = selectedTest.getQuestions().get(currentIndex).getSolutionText();
+				mCallback.onShowSoluton(_solutionText);
+				//Toast.makeText(getActivity(), "Solution!", Toast.LENGTH_SHORT).show();
 			}});
 		
 		mDetector = new GestureDetectorCompat(getActivity(), new MyGestureListener());
@@ -273,6 +270,7 @@ public class TestQuestionFragment extends Fragment {
 		}
 		catch(IOException ex) 
 		{
+			Log.e(TAG, ex.getMessage());
 		    return;
 		}
 	}
@@ -385,42 +383,4 @@ public class TestQuestionFragment extends Fragment {
             return true;
         }
     }
-	
-	protected void loadAndParseLocalXml() {
-		Log.d(TAG, "loadAndParseLocalXml");
-		XmlResourceParser configXml = getActivity().getResources().getXml(R.xml.config);
-		try {
-			Log.d(TAG, "Start parsing XML...");
-			int eventType = configXml.getEventType();
-			while(eventType != XmlPullParser.END_DOCUMENT) {
-				Log.d(TAG, "In while loop...");
-				if(eventType == XmlPullParser.START_DOCUMENT) {
-					
-				}
-				if(eventType == XmlPullParser.START_TAG) {
-					String element = configXml.getName();
-					Log.d(TAG, "XML element is " + element);
-					if(element.equals("question_text")) {
-						configXml.next();
-						Question q = new Question();
-						q.setQuestion(configXml.getText().toString());
-						Log.d(TAG, "Value of the question is " + configXml.getText());
-					}
-				}
-				if(eventType == XmlPullParser.END_TAG) {
-					
-				}
-				configXml.next();
-				//Log.d(TAG, "Value of the element is " + configXml.getText());
-				eventType = configXml.getEventType();
-			}
-		} catch (XmlPullParserException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
 }

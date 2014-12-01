@@ -22,6 +22,7 @@ public class Question implements Serializable {
 	private String selectedOption;
 	private String solution;
 	private int questionNumber;
+	private String solutionText;
 
 	/**
 	 * 
@@ -68,6 +69,14 @@ public class Question implements Serializable {
 
 	public void setSelectedOption(String selectedOption) {
 		this.selectedOption = selectedOption;
+	}
+
+	public String getSolutionText() {
+		return solutionText;
+	}
+
+	public void setSolutionText(String solutionText) {
+		this.solutionText = solutionText;
 	}
 
 }
