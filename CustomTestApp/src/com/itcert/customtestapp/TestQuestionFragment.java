@@ -219,6 +219,7 @@ public class TestQuestionFragment extends Fragment {
 		    	 eButton.setEnabled(false);
 		    	 testCompleted = true;
 		    	 solutionButton.setEnabled(true);
+		    	 endTestAction();
 		     }
 		  }.start();
 		  updateImage();
@@ -290,6 +291,98 @@ public class TestQuestionFragment extends Fragment {
 		}
 		selectedTest = null;
 		timer.cancel();
+	}
+	
+	
+	private void endTestAction() {
+        String opts = selectedTest.getQuestions().get(currentIndex).getSelectedOption();
+        if(opts != null) {
+        	if(opts.equals("A")) {
+        		updateButtonColor(aButton);
+        	}
+        	if(opts.equals("B")) {
+        		updateButtonColor(bButton);
+        	}
+        	if(opts.equals("C")) {
+        		updateButtonColor(cButton);
+        	}
+        	if(opts.equals("D")) {
+        		updateButtonColor(dButton);
+        	}
+        	if(opts.equals("E")) {
+        		updateButtonColor(eButton);
+        	}
+        	if(testCompleted) {
+        		if(!opts.equals(selectedTest.getQuestions().get(currentIndex).getSolution())) {
+        			String message = opts + " is incorrect.  The correct answer is " + selectedTest.getQuestions().get(currentIndex).getSolution();
+        			switch(QuestionEnum.get(opts.toUpperCase(Locale.US))) {
+        			case A:
+        				highlightIncorrectAnswersByColor(aButton);
+        				break;
+        			case B:
+        				highlightIncorrectAnswersByColor(bButton);
+        				break;
+        			case C:
+        				highlightIncorrectAnswersByColor(cButton);
+        				break;
+        			case D:
+        				highlightIncorrectAnswersByColor(dButton);
+        				break;
+        			case E:
+        				highlightIncorrectAnswersByColor(eButton);
+        				break;
+        			case Z:
+        				break;
+        			}
+        			// highlight the correct answer
+        			switch(QuestionEnum.get(selectedTest.getQuestions().get(currentIndex).getSolution().toUpperCase(Locale.US))) {
+        			case A:
+        				highlightCorrectAnswerByColorAtEndOfTest(aButton);
+        				break;
+        			case B:
+        				highlightCorrectAnswerByColorAtEndOfTest(bButton);
+        				break;
+        			case C:
+        				highlightCorrectAnswerByColorAtEndOfTest(cButton);
+        				break;
+        			case D:
+        				highlightCorrectAnswerByColorAtEndOfTest(dButton);
+        				break;
+        			case E:
+        				highlightCorrectAnswerByColorAtEndOfTest(eButton);
+        				break;
+        			case Z:
+        				break;
+        			}
+        			Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+        		}
+        	}
+        } else {
+        	if(testCompleted) {
+        		// highlight the correct answer
+    			switch(QuestionEnum.get(selectedTest.getQuestions().get(currentIndex).getSolution().toUpperCase(Locale.US))) {
+    			case A:
+    				highlightCorrectAnswerByColorAtEndOfTest(aButton);
+    				break;
+    			case B:
+    				highlightCorrectAnswerByColorAtEndOfTest(bButton);
+    				break;
+    			case C:
+    				highlightCorrectAnswerByColorAtEndOfTest(cButton);
+    				break;
+    			case D:
+    				highlightCorrectAnswerByColorAtEndOfTest(dButton);
+    				break;
+    			case E:
+    				highlightCorrectAnswerByColorAtEndOfTest(eButton);
+    				break;
+    			case Z:
+    				break;
+    			}
+        		String message = " You did not answer this question.  The correct answer is " + selectedTest.getQuestions().get(currentIndex).getSolution();
+    			Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+        	}
+        }
 	}
 
 	/**
