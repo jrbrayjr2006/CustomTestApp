@@ -10,19 +10,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
         android:gravity="center_vertical|center_horizontal|left"
         android:text="@string/end_test" />
-
-    <TextView
-        android:id="@+id/questionTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/endTestBtn"
-        android:layout_alignBottom="@+id/endTestBtn"
-        android:layout_marginLeft="72dp"
-        android:layout_toRightOf="@+id/endTestBtn"
-        android:text="@string/question"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <LinearLayout
         android:id="@+id/linearLayout1"
@@ -87,13 +77,24 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/questionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/timerTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@+id/endTestBtn"
+        android:text="@string/question"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
         android:id="@+id/timerTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/questionTextView"
-        android:layout_alignBottom="@+id/questionTextView"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="24dp"
+        android:layout_above="@+id/linearLayout1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/questionTextView"
+        android:layout_marginLeft="5dp"
         android:text="@string/timer_default"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -101,10 +102,9 @@
         android:id="@+id/questionImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/linearLayout1"
-        android:layout_marginTop="50dp"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/endTestBtn"
+        android:layout_above="@+id/timerTextView"
+        android:layout_marginLeft="55dp"
+        android:layout_toRightOf="@+id/questionTextView"
         android:contentDescription="@string/question_image"
         android:src="@drawable/sample1" />
 

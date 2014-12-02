@@ -270,8 +270,8 @@ public class TestQuestionFragment extends Fragment {
 		    Drawable d = Drawable.createFromStream(ims, null);
 		    // set image to ImageView
 		    questionImageView.setImageDrawable(d);
-		    questionImageView.setMinimumWidth(1600);
-		    questionImageView.setMinimumHeight(1000);
+		    questionImageView.setMinimumWidth(800);
+		    questionImageView.setMinimumHeight(500);
 		}
 		catch(IOException ex) 
 		{
