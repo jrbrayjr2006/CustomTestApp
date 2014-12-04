@@ -70,8 +70,11 @@ public class TestQuestionFragment extends Fragment {
 	private int currentIndex;
 	private CountDownTimer timer;
 	
+	private int mNumberOfCorrectAnswers;
+	private String mReviewQuestions;
+	
 	public interface OnTestListener {
-		public void onEndTestClick();
+		public void onEndTestClick(int _numCorrect, String _review);
 		
 		public void onShowSoluton(String _solutionText);
 	}
@@ -104,6 +107,9 @@ public class TestQuestionFragment extends Fragment {
 		testIndex = getArguments().getInt("index");
 		currentIndex = 0;
 		
+		// initialize values for results
+		mNumberOfCorrectAnswers = 0;
+		
 		questionText.setText("Question " + selectedTest.getQuestions().get(0).getQuestionNumber() + "/10");
 		// was using myTest here 11-28-2014
 		selectedTest.setQuestions(selectedTest.getQuestions());
@@ -112,8 +118,9 @@ public class TestQuestionFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
+				calcTestResults();
 				clearAndResetTests();
-				mCallback.onEndTestClick();
+				mCallback.onEndTestClick(mNumberOfCorrectAnswers, mReviewQuestions);
 				
 			}
 			
@@ -520,4 +527,24 @@ public class TestQuestionFragment extends Fragment {
             return true;
         }
     }
+	
+	private void calcTestResults() {
+		StringBuffer sb = new StringBuffer();
+		selectedTest.getQuestions();
+		for(Question q : selectedTest.getQuestions()) {
+			// getSolution() will never return a null value, whereas getSelectedOption() can return a null value
+			if(q.getSolution().equals(q.getSelectedOption())) {
+				mNumberOfCorrectAnswers++;
+			} else {
+				//mReviewQuestionsList.add(String.valueOf(q.getQuestionNumber()));
+				if(sb.length() < 1) {
+					sb.append(String.valueOf(q.getQuestionNumber()));
+				} else {
+					sb.append(", ");
+					sb.append(String.valueOf(q.getQuestionNumber()));
+				}
+				mReviewQuestions = sb.toString();
+			}
+		}
+	}
 }

@@ -7,6 +7,7 @@
     <string name="action_quit">Quit</string>
     <string name="end_test">End Test</string>
     <string name="see_results">See Results</string>
+    <string name="end_test_label">End Test</string>
     <string name="label_a">A</string>
     <string name="label_b">B</string>
     <string name="label_c">C</string>
@@ -14,9 +15,13 @@
     <string name="label_e">E</string>
     <string name="label_solution">Solution</string>
     <string name="close_label">Close</string>
+    <string name="start_new_test_label">Start New Test</string>
     <string name="question">Question x/10</string>
     <string name="question_image">Question Image</string>
     <string name="timer_default">10:00</string>
+    <string name="tests_label">Tests</string>
+    <string name="correct_answers_text">Correct Answers</string>
     <string name="select_test_headline">Please select a test and start practicing</string>
+    <string name="review_questions_text">Review these questions</string>
 
 </resources>

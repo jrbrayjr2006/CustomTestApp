@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.itcert.customtestapp.ResultsFragment.OnResultsListener;
 import com.itcert.customtestapp.TestListFragment.OnTestSelectedListener;
 import com.itcert.customtestapp.TestQuestionFragment.OnTestListener;
 import com.itcert.customtestapp.model.Question;
@@ -26,16 +27,26 @@ import com.itcert.customtestapp.model.TestObject;
 
 
 
-public class MainActivity extends Activity implements OnTestSelectedListener, OnTestListener {
+public class MainActivity extends Activity implements OnTestSelectedListener, OnTestListener, OnResultsListener {
 	
 	private FragmentManager fragmentManager;
 	private Fragment mTestListFragment;
+	private Fragment mResultsFragment;
 	private TestQuestionFragment testQuestionFragment;
 	private ArrayList<TestObject> testObjectList;
+	//private int mNumberOfCorrectAnswers;
+	//private String mReviewQuestions;
+	
+	/**
+	 * Index of test for which results are shown
+	 */
+	private int mTestResultIndex = -1;
 	
 	private final static String TAG = "MainActivity";
 	public final static String TESTS = "tests";
 	public final static String TEST = "test";
+	public final static String REVIEW_LIST_KEY = "review";
+	public final static String NUM_CORRECT_KEY = "correct";
 	private final static int MAX_NUMBER_OF_QUESTIONS = 10;
 
     @Override
@@ -100,9 +111,6 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 		testQuestionFragment = new TestQuestionFragment();
 		
 		Bundle arguments = new Bundle();
-		//myTest = testObjectList.get(index);
-		//arguments.putCharSequence("title", myTest.getTestTitle());
-		//arguments.putInt("index", myTest.getIndex());
 		TestObject to = testObjectList.get(index);
 		arguments.putInt("index", index);
 		arguments.putSerializable(TEST, to);
@@ -110,12 +118,42 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 		
 		fragmentManager.beginTransaction().replace(R.id.fragmentContainer, testQuestionFragment).commit();
 		
+		mTestResultIndex = index;
 		setTitle(testList.get(index));
 	}
 
 
 	@Override
-	public void onEndTestClick() {
+	public void onEndTestClick(int _numCorrect, String _review) {
+		if(fragmentManager == null) {
+			fragmentManager = getFragmentManager();
+		}
+		if(mResultsFragment == null) {
+			mResultsFragment = new ResultsFragment();
+    	}
+		if(mTestResultIndex < 0) {
+			mTestResultIndex = 0;
+		}
+		
+		Bundle arguments = new Bundle();
+		arguments.putInt(NUM_CORRECT_KEY, _numCorrect);
+		arguments.putString(REVIEW_LIST_KEY, _review);
+		mResultsFragment.setArguments(arguments);
+		
+		fragmentManager.beginTransaction().replace(R.id.fragmentContainer, mResultsFragment).commit();
+	}
+	
+	@Override
+	public void onShowSoluton(String _solutionText) {
+		// TODO Auto-generated method stub
+		openSolutionDialog(_solutionText);
+	}
+	
+	/**
+	 * Go to screen to select a new test
+	 */
+	@Override
+	public void onShowTestList() {
 		if(fragmentManager == null) {
 			fragmentManager = getFragmentManager();
 		}
@@ -123,12 +161,7 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
     		mTestListFragment = new TestListFragment();
     	}
 		fragmentManager.beginTransaction().replace(R.id.fragmentContainer, mTestListFragment).commit();
-	}
-	
-	@Override
-	public void onShowSoluton(String _solutionText) {
-		// TODO Auto-generated method stub
-		openSolutionDialog(_solutionText);
+		setTitle(getResources().getString(R.string.tests_label));
 	}
 	
 	private void openHelp() {
