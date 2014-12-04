@@ -44,6 +44,9 @@ public class TestListAdapter extends ArrayAdapter<TestObject> {
 		TextView tv = (TextView)convertView.findViewById(R.id.textViewTestName);
 		tv.setText(test.getTestTitle());
 		
+		TextView tvScore = (TextView)convertView.findViewById(R.id.textViewTestScore);
+		tvScore.setText(test.getScoreText());
+		
 		return convertView;
 	}
 

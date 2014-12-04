@@ -18,6 +18,8 @@ public class TestObject implements Serializable {
 	private String testTitle;
 	private List<Question> questions;
 	private int index;
+	private int score;
+	private String scoreText = "score: TRY ME! >";
 
 	/**
 	 * 
@@ -56,6 +58,22 @@ public class TestObject implements Serializable {
 
 	public void setIndex(int index) {
 		this.index = index;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public String getScoreText() {
+		return scoreText;
+	}
+
+	public void setScoreText(String scoreText) {
+		this.scoreText = scoreText;
 	}
 
 }
