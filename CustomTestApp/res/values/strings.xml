@@ -23,5 +23,8 @@
     <string name="correct_answers_text">Correct Answers</string>
     <string name="select_test_headline">Please select a test and start practicing</string>
     <string name="review_questions_text">Review these questions</string>
+    <string name="low_performance">Low performance!</string>
+    <string name="average_performance">Average performance!</string>
+    <string name="excellent_performance">Excellent performance!</string>
 
 </resources>
