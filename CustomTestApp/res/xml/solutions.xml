@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <solutions>
     <test id="test1" title="Test 1">
-        <question id="1" solution="B">
+        <question id="1" solution="A">
             This is the solution text to Question 1, Test 1
         </question>
         <question id="2" solution="A">
             This is the solution text to Question 2, Test 1
         </question>
-        <question id="3" solution="E">
+        <question id="3" solution="A">
             This is the solution text to Question 3, Test 1
         </question>
-        <question id="4" solution="E">
+        <question id="4" solution="B">
             This is the solution text to Question 4, Test 1
         </question>
-        <question id="5" solution="A">
+        <question id="5" solution="B">
             This is the solution text to Question 5, Test 1
         </question>
         <question id="6" solution="B">
             This is the solution text to Question 6, Test 1
         </question>
-        <question id="7" solution="E">
+        <question id="7" solution="C">
             This is the solution text to Question 7, Test 1
         </question>
-        <question id="8" solution="E">
+        <question id="8" solution="C">
             This is the solution text to Question 8, Test 1
         </question>
-        <question id="9" solution="B">
+        <question id="9" solution="D">
             This is the solution text to Question 9, Test 1
         </question>
-        <question id="10" solution="C">
+        <question id="10" solution="D">
             This is the solution text to Question 10, Test 1
         </question>
     </test>

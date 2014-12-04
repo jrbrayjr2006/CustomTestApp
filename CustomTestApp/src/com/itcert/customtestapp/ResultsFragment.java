@@ -87,7 +87,7 @@ public class ResultsFragment extends Fragment {
 			messege = getActivity().getResources().getString(R.string.low_performance);
 		}
 		if(_results >= 8) {
-			getActivity().getResources().getString(R.string.excellent_performance);
+			messege = getActivity().getResources().getString(R.string.excellent_performance);
 		}
 		return messege;
 	}
