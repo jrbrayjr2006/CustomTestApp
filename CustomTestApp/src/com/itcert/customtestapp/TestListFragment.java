@@ -3,7 +3,11 @@
  */
 package com.itcert.customtestapp;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +25,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.itcert.customtestapp.adapter.TestListAdapter;
 import com.itcert.customtestapp.model.Question;
@@ -31,7 +37,7 @@ import com.itcert.customtestapp.model.TestObject;
  *
  */
 public class TestListFragment extends Fragment {
-	
+	TextView test1TextView;
 	private ListView mTestListView;
 	
 	//private ArrayAdapter<String> mArrayAdapter;
@@ -61,9 +67,12 @@ public class TestListFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup root, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_question_list, root, false);
 		
+		//test1TextView = (TextView)v.findViewById();
+		
 		mTestListView = (ListView)v.findViewById(R.id.questionsListView);
 		//load the data from the config.xml into TestObjects
 		testObjects = loadAndParseLocalXml();
+		readScoreXmlFile();
 		
 		mTestList = new ArrayList<String>();
 		for(TestObject to : testObjects) {
@@ -199,6 +208,44 @@ public class TestListFragment extends Fragment {
 			e.printStackTrace();
 		}
 		return tests;
+	}
+	
+	/**
+	 * Read the scores config file from internal storage and populate the test object score values
+	 */
+	protected void readScoreXmlFile() {
+		Log.d(TAG, "Entering readScoreXmlFile() method...");
+		try {
+
+			File myFile = new File(getActivity().getFilesDir(), "scores.txt");
+			FileInputStream fIn = new FileInputStream(myFile);
+			BufferedReader myReader = new BufferedReader(
+					new InputStreamReader(fIn));
+			String aTestScoreRow = "";
+			//String aBuffer = "";
+			int index = 0;
+			while ((aTestScoreRow = myReader.readLine()) != null) {
+				Log.d(TAG, "The test score is: " + aTestScoreRow);
+				String[] pair = aTestScoreRow.split("=");
+				//String key = pair[0];
+				String value = pair[1];
+				// populate test object score values
+				if(!value.equals("-1")) {
+					testObjects.get(index).setScore(Integer.parseInt(value));
+					testObjects.get(index).setScoreText("score: " + value + " >");
+				} else {
+					testObjects.get(index).setScoreText("score: TRY THIS! >");
+				}
+				index++;
+				//aBuffer += aTestScoreRow + "\n";
+			}
+			//txtData.setText(aBuffer);
+			myReader.close();
+			//Toast.makeText(getActivity().getBaseContext(),"Done reading SD 'scores.txt'" + aBuffer,Toast.LENGTH_SHORT).show();
+		} catch (Exception e) {
+			Toast.makeText(getActivity().getBaseContext(), e.getMessage(),
+					Toast.LENGTH_SHORT).show();
+		}
 	}
 
 }

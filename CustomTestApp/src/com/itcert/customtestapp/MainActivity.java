@@ -1,6 +1,12 @@
 package com.itcert.customtestapp;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +24,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.itcert.customtestapp.ResultsFragment.OnResultsListener;
 import com.itcert.customtestapp.TestListFragment.OnTestSelectedListener;
@@ -37,6 +44,8 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 	//private int mNumberOfCorrectAnswers;
 	//private String mReviewQuestions;
 	
+	private File scoreFile;
+	
 	/**
 	 * Index of test for which results are shown
 	 */
@@ -48,6 +57,7 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 	public final static String REVIEW_LIST_KEY = "review";
 	public final static String NUM_CORRECT_KEY = "correct";
 	private final static int MAX_NUMBER_OF_QUESTIONS = 10;
+	
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +65,20 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_main);
         
-        // Populate the test data from the config.xml file
+        // 1. Populate the test data from the config.xml file
         testObjectList = loadAndParseLocalXml();
         
-        //TODO populate the solution text from the solutions.xml file
+        // 2. populate the solution text from the solutions.xml file
         loadAndParseSolutionsXml(testObjectList);
+        
+        // 3. Make sure there is a scores.txt config file
+        scoreFile = new File(getFilesDir(), "scores.txt");
+        if(!scoreFile.exists()) {
+        	writeScoreXml(testObjectList);
+        }
+        
+        // 4. Populate the score properties in the TestOjects
+        readScoreXmlFile();
         
         fragmentManager = getFragmentManager();
         mTestListFragment = fragmentManager.findFragmentById(R.id.test_list_fragment);
@@ -139,6 +158,11 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 		arguments.putInt(NUM_CORRECT_KEY, _numCorrect);
 		arguments.putString(REVIEW_LIST_KEY, _review);
 		mResultsFragment.setArguments(arguments);
+		
+		//TODO update test scores in objects and
+		testObjectList.get(mTestResultIndex).setScore(_numCorrect);
+		testObjectList.get(mTestResultIndex).setScoreText("score: " + _numCorrect + " >");
+		writeScoreXml(testObjectList);
 		
 		fragmentManager.beginTransaction().replace(R.id.fragmentContainer, mResultsFragment).commit();
 	}
@@ -357,6 +381,91 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 		} catch (IOException e) {
 			Log.e(TAG, e.getMessage());
 			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Test method  testObjectList
+	 */
+	protected void writeScoreXml() {
+		try {
+			// use internal storage
+			File myFile = new File(getFilesDir(), "scores.txt");
+			myFile.createNewFile();
+			FileOutputStream fOut = new FileOutputStream(myFile);
+			OutputStreamWriter scoresOutWriter = new OutputStreamWriter(fOut);
+			scoresOutWriter.append("\ntest1=8");
+			scoresOutWriter.append("\ntest2=9");
+			scoresOutWriter.append("\ntest3=5");
+			scoresOutWriter.close();
+			fOut.close();
+			Toast.makeText(getBaseContext(), "Done writing SD 'mysdfile.txt'", Toast.LENGTH_SHORT).show();
+		} catch(IOException ioe) {
+			Log.e(TAG, ioe.getMessage());
+		}
+	}
+	
+	/**
+	 * Get a list of TestObjects and extract the testID and score values.<br/>
+	 * Write these values to a scores configuration file in the app's internal storage
+	 * 
+	 * @param _tests
+	 * Test method  testObjectList
+	 */
+	protected void writeScoreXml(List<TestObject> _tests) {
+		Log.d(TAG, "Entering writeScoreXml(List) method...");
+		try {
+			// use internal storage
+			scoreFile = new File(getFilesDir(), "scores.txt");
+			scoreFile.createNewFile();
+			FileOutputStream fOut = new FileOutputStream(scoreFile);
+			OutputStreamWriter scoresOutWriter = new OutputStreamWriter(fOut);
+			// iterate over test objects and write to scores config file
+			for(TestObject _test : _tests) {
+				scoresOutWriter.append(_test.getTestID() + "=" + _test.getScore() + "\n");
+			}
+			scoresOutWriter.close();
+			fOut.close();
+			Log.d(TAG, "Done writing SD 'scores.txt'");
+			//Toast.makeText(getBaseContext(), "Done writing SD 'mysdfile.txt'", Toast.LENGTH_SHORT).show();
+		} catch(IOException ioe) {
+			Log.e(TAG, ioe.getMessage());
+		}
+	}
+	
+	/**
+	 * Read the scores config file from internal storage and populate the test object score values
+	 */
+	protected void readScoreXmlFile() {
+		Log.d(TAG, "Entering readScoreXmlFile() method...");
+		try {
+
+			File myFile = new File(getFilesDir(), "scores.txt");
+			FileInputStream fIn = new FileInputStream(myFile);
+			BufferedReader myReader = new BufferedReader(
+					new InputStreamReader(fIn));
+			String aTestScoreRow = "";
+			//String aBuffer = "";
+			int index = 0;
+			while ((aTestScoreRow = myReader.readLine()) != null) {
+				Log.d(TAG, "The test score is: " + aTestScoreRow);
+				String[] pair = aTestScoreRow.split("=");
+				//String key = pair[0];
+				String value = pair[1];
+				// populate test object score values
+				if(!value.equals("-1")) {
+					testObjectList.get(index).setScore(Integer.parseInt(value));
+					testObjectList.get(index).setScoreText("score: " + value + " >");
+				}
+				index++;
+				//aBuffer += aTestScoreRow + "\n";
+			}
+			//txtData.setText(aBuffer);
+			myReader.close();
+			//Toast.makeText(getBaseContext(),"Done reading SD 'score.txt'",Toast.LENGTH_SHORT).show();
+		} catch (Exception e) {
+			Log.e(TAG,e.getMessage());
+			Toast.makeText(getBaseContext(), e.getMessage(),Toast.LENGTH_SHORT).show();
 		}
 	}
 

@@ -18,8 +18,8 @@ public class TestObject implements Serializable {
 	private String testTitle;
 	private List<Question> questions;
 	private int index;
-	private int score;
-	private String scoreText = "score: TRY ME! >";
+	private int score = -1;
+	private String scoreText; // = "score: TRY ME! >";
 
 	/**
 	 * 
