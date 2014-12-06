@@ -9,17 +9,17 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/testIdTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Medium Text"
+            android:paddingLeft="10dp"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:id="@+id/endTestTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="100dp"
+            android:paddingLeft="200dp"
             android:layout_gravity="center"
             android:gravity="center"
             android:text="@string/end_test_label"
@@ -39,6 +39,7 @@
         android:id="@+id/scoreTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/correct_answers_text"/>
     
@@ -46,6 +47,7 @@
         android:id="@+id/reviewTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/review_questions_text"/>
     
@@ -53,12 +55,14 @@
         android:id="@+id/reviewOutputTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <Button
         android:id="@+id/startNewTestBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
         android:text="@string/start_new_test_label" />
 
 </LinearLayout>

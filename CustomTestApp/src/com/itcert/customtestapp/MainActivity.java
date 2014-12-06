@@ -54,6 +54,7 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 	private final static String TAG = "MainActivity";
 	public final static String TESTS = "tests";
 	public final static String TEST = "test";
+	public final static String TEST_TITLE = "test_title";
 	public final static String REVIEW_LIST_KEY = "review";
 	public final static String NUM_CORRECT_KEY = "correct";
 	private final static int MAX_NUMBER_OF_QUESTIONS = 10;
@@ -143,7 +144,7 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 
 
 	@Override
-	public void onEndTestClick(int _numCorrect, String _review) {
+	public void onEndTestClick(int _numCorrect, String _review, String _title) {
 		if(fragmentManager == null) {
 			fragmentManager = getFragmentManager();
 		}
@@ -157,6 +158,7 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 		Bundle arguments = new Bundle();
 		arguments.putInt(NUM_CORRECT_KEY, _numCorrect);
 		arguments.putString(REVIEW_LIST_KEY, _review);
+		arguments.putString(TEST_TITLE, _title);
 		mResultsFragment.setArguments(arguments);
 		
 		//TODO update test scores in objects and

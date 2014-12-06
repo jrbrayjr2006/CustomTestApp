@@ -72,9 +72,10 @@ public class TestQuestionFragment extends Fragment {
 	
 	private int mNumberOfCorrectAnswers;
 	private String mReviewQuestions;
+	private String mTestTitle;
 	
 	public interface OnTestListener {
-		public void onEndTestClick(int _numCorrect, String _review);
+		public void onEndTestClick(int _numCorrect, String _review, String _title);
 		
 		public void onShowSoluton(String _solutionText);
 	}
@@ -103,6 +104,7 @@ public class TestQuestionFragment extends Fragment {
 		solutionButton = (Button)v.findViewById(R.id.buttonSolution);
 		
 		selectedTest = (TestObject)getArguments().getSerializable(MainActivity.TEST);
+		mTestTitle = selectedTest.getTestTitle();
 		
 		testIndex = getArguments().getInt("index");
 		currentIndex = 0;
@@ -120,7 +122,7 @@ public class TestQuestionFragment extends Fragment {
 			public void onClick(View v) {
 				calcTestResults();
 				clearAndResetTests();
-				mCallback.onEndTestClick(mNumberOfCorrectAnswers, mReviewQuestions);
+				mCallback.onEndTestClick(mNumberOfCorrectAnswers, mReviewQuestions, mTestTitle);
 				
 			}
 			
