@@ -17,9 +17,7 @@ public class HelpDialogFragment extends DialogFragment {
 	/**
 	 * 
 	 */
-	public HelpDialogFragment() {
-		// TODO Auto-generated constructor stub
-	}
+	public HelpDialogFragment() {}
 	
 	
 	@Override
