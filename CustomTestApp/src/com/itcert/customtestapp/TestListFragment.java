@@ -232,9 +232,9 @@ public class TestListFragment extends Fragment {
 				// populate test object score values
 				if(!value.equals("-1")) {
 					testObjects.get(index).setScore(Integer.parseInt(value));
-					testObjects.get(index).setScoreText("score: " + value + " >");
+					testObjects.get(index).setScoreText("Obtained score: " + value + "/10 >");
 				} else {
-					testObjects.get(index).setScoreText("score: TRY THIS! >");
+					testObjects.get(index).setScoreText("Try me out! >");
 				}
 				index++;
 				//aBuffer += aTestScoreRow + "\n";

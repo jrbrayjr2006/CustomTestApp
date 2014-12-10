@@ -24,7 +24,6 @@ public class ResultsFragment extends Fragment {
 	private TextView mPerformanceTextView;
 	private TextView mScoreTextView;
 	private TextView mReviewOutputTextView;
-	private TextView mTestIdTextView;
 	private Button mStartNewTestBtn;
 	private int mNumberCorrect;
 	private String mIncorrectAnswers;
@@ -67,19 +66,6 @@ public class ResultsFragment extends Fragment {
 		
 		mPerformanceTextView = (TextView)v.findViewById(R.id.performanceTextView);
 		mPerformanceTextView.setText(evalMessege);
-		
-		mTestIdTextView = (TextView)v.findViewById(R.id.testIdTextView);
-		mTestIdTextView.setText("< " + mTestTitle);
-		mTestIdTextView.setOnTouchListener(new OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-			
-		});
-		
 		
 		mStartNewTestBtn = (Button)v.findViewById(R.id.startNewTestBtn);
 		mStartNewTestBtn.setOnClickListener(new OnClickListener() {
