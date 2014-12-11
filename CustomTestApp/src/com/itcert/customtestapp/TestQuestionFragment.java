@@ -5,6 +5,7 @@ package com.itcert.customtestapp;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -90,6 +91,7 @@ public class TestQuestionFragment extends Fragment {
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup root, Bundle savedInstanceState) {
+		super.onCreateView(inflater, root, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_question, root, false);
 		
 		timerValue = (TextView)v.findViewById(R.id.timerTextView);
@@ -121,6 +123,14 @@ public class TestQuestionFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				calcTestResults();
+				endTestButton.setText(getActivity().getResources().getString(R.string.see_results));
+		    	aButton.setEnabled(false);
+		    	bButton.setEnabled(false);
+		    	cButton.setEnabled(false);
+		    	dButton.setEnabled(false);
+		    	eButton.setEnabled(false);
+		    	testCompleted = true;
+		    	solutionButton.setEnabled(true);
 				timer.cancel();
 				mCallback.onEndTestClick(mNumberOfCorrectAnswers, mReviewQuestions, mTestTitle);
 				
@@ -524,9 +534,9 @@ public class TestQuestionFragment extends Fragment {
 	
 	private void calcTestResults() {
 		StringBuffer sb = new StringBuffer();
-		selectedTest.getQuestions();
+		List<Question> lQuestions = selectedTest.getQuestions();
 		mNumberOfCorrectAnswers = 0;
-		for(Question q : selectedTest.getQuestions()) {
+		for(Question q : lQuestions) {
 			// getSolution() will never return a null value, whereas getSelectedOption() can return a null value
 			if(q.getSolution().equals(q.getSelectedOption())) {
 				mNumberOfCorrectAnswers++;
