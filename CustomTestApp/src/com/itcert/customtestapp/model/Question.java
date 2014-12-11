@@ -27,9 +27,7 @@ public class Question implements Serializable {
 	/**
 	 * 
 	 */
-	public Question() {
-		// TODO Auto-generated constructor stub
-	}
+	public Question() {}
 
 	public ArrayList<String> getQuestionOptions() {
 		return questionOptions;

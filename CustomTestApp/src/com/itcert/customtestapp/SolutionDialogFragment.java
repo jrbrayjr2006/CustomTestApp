@@ -19,9 +19,7 @@ public class SolutionDialogFragment extends DialogFragment {
 	/**
 	 * 
 	 */
-	public SolutionDialogFragment() {
-		// TODO Auto-generated constructor stub
-	}
+	public SolutionDialogFragment() {}
 	
 	/**
 	 * 

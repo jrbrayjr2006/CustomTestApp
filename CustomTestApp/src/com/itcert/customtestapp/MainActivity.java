@@ -18,7 +18,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+//import android.app.FragmentTransaction;
 import android.content.pm.ActivityInfo;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
@@ -39,11 +39,11 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 	
 	private FragmentManager fragmentManager;
 	private Fragment mTestListFragment;
-	private Fragment mResultsFragment;
+	//private Fragment mResultsFragment;
 	private TestQuestionFragment testQuestionFragment;
 	private ArrayList<TestObject> testObjectList;
-	//private int mNumberOfCorrectAnswers;
-	//private String mReviewQuestions;
+	
+	protected final static String DEFAULT_Z = "Z";
 	
 	private File scoreFile;
 	
@@ -132,6 +132,12 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 		
 		Bundle arguments = new Bundle();
 		TestObject to = testObjectList.get(index);
+		
+		// make sure question selected option values are set to DEFAULT_Z to prevent null pointer error
+		for(Question q : to.getQuestions()) {
+			q.setSelectedOption(DEFAULT_Z);
+		}
+		
 		arguments.putInt("index", index);
 		arguments.putSerializable(TEST, to);
 		testQuestionFragment.setArguments(arguments);
@@ -152,19 +158,21 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 		if(mResultsFragment == null) {
 			mResultsFragment = new ResultsFragment();
     	}
+		*/
+		
 		if(mTestResultIndex < 0) {
 			mTestResultIndex = 0;
 		}
-		*/
+		
 		// DialogFragment.show() will take care of adding the fragment
 	    // in a transaction.  We also want to remove any currently showing
-	    // dialog, so make our own transaction and take care of that here.
+	    /* dialog, so make our own transaction and take care of that here.
 	    FragmentTransaction ft = getFragmentManager().beginTransaction();
 	    Fragment prev = getFragmentManager().findFragmentByTag("dialog");
 	    if (prev != null) {
 	        ft.remove(prev);
 	    }
-	    ft.addToBackStack(null);
+	    ft.addToBackStack(null);*/
 
 		
 		Bundle arguments = new Bundle();
@@ -432,7 +440,6 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 			scoresOutWriter.close();
 			fOut.close();
 			Log.d(TAG, "Done writing SD 'scores.txt'");
-			//Toast.makeText(getBaseContext(), "Done writing SD 'mysdfile.txt'", Toast.LENGTH_SHORT).show();
 		} catch(IOException ioe) {
 			Log.e(TAG, ioe.getMessage());
 		}
@@ -463,11 +470,8 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 					testObjectList.get(index).setScoreText("score: " + value + " >");
 				}
 				index++;
-				//aBuffer += aTestScoreRow + "\n";
 			}
-			//txtData.setText(aBuffer);
 			myReader.close();
-			//Toast.makeText(getBaseContext(),"Done reading SD 'score.txt'",Toast.LENGTH_SHORT).show();
 		} catch (Exception e) {
 			Log.e(TAG,e.getMessage());
 			Toast.makeText(getBaseContext(), e.getMessage(),Toast.LENGTH_SHORT).show();

@@ -24,9 +24,7 @@ public class TestObject implements Serializable {
 	/**
 	 * 
 	 */
-	public TestObject() {
-		// TODO Auto-generated constructor stub
-	}
+	public TestObject() {}
 
 	public String getTestID() {
 		return testID;

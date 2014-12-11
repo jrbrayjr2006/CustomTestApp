@@ -8,11 +8,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 /**
  * @author james_r_bray
@@ -20,16 +15,11 @@ import android.widget.TextView;
  */
 public class ResultsDialogFragment extends DialogFragment {
 	
-	private TextView mPerformanceTextView;
-	private TextView mScoreTextView;
-	private TextView mReviewOutputTextView;
-	private Button mStartNewTestBtn;
 	private int mNumberCorrect;
 	
 	private String mTitle;
 	private String mIncorrectAnswers;
 	
-	private Bundle arguments;
 	
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -84,37 +74,12 @@ public class ResultsDialogFragment extends DialogFragment {
 		return builder.create();
 	}
 	
-	private String generateHelpText() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Score");
-		return sb.toString();
-	}
-
-	
-	/*
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup root, Bundle savedInstanceState) {
-		super.onCreateView(inflater, root, savedInstanceState);
-		View v = inflater.inflate(R.layout.fragment_result, root);
-		
-		mNumberCorrect = getArguments().getInt(MainActivity.NUM_CORRECT_KEY);
-		mIncorrectAnswers = getArguments().getString(MainActivity.REVIEW_LIST_KEY);
-		
-		String evalMessege = getTestEvaluation(mNumberCorrect);
-		
-		mScoreTextView = (TextView)v.findViewById(R.id.scoreTextView);
-		mScoreTextView.setText(getActivity().getResources().getString(R.string.correct_answers_text) + " " + mNumberCorrect + "/10");
-		
-		mReviewOutputTextView = (TextView)v.findViewById(R.id.reviewOutputTextView);
-		mReviewOutputTextView.setText(mIncorrectAnswers);
-		
-		mPerformanceTextView = (TextView)v.findViewById(R.id.performanceTextView);
-		mPerformanceTextView.setText(evalMessege);
-		
-		return v;
-	}
-	*/
-	
+	/**
+	 * Generate test for results
+	 * 
+	 * @param _results
+	 * @return
+	 */
 	private String getTestEvaluation(int _results) {
 		String messege = getActivity().getResources().getString(R.string.average_performance);
 		if(_results < 5) {

@@ -64,8 +64,8 @@ public class TestQuestionFragment extends Fragment {
 	private ImageView questionImageView;
 	long timeInMilliseconds = 0L;
 	long timeSwapBuff = 0L;
-	//long updatedTime10 = 600000;
-	long updatedTime10 = 10000;  //TODO for testing only, remove when ready to ship
+	long updatedTime10 = 600000;
+	//long updatedTime10 = 10000;  // for testing only, remove when ready to ship
 	private int testIndex;
 	private int currentIndex;
 	private CountDownTimer timer;
@@ -121,7 +121,7 @@ public class TestQuestionFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				calcTestResults();
-				//clearAndResetTests();
+				timer.cancel();
 				mCallback.onEndTestClick(mNumberOfCorrectAnswers, mReviewQuestions, mTestTitle);
 				
 			}
@@ -132,7 +132,6 @@ public class TestQuestionFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				defaultButtonTextColor();
 				updateCurrentQuestion("A");
 				updateButtonColor(aButton);
@@ -143,7 +142,6 @@ public class TestQuestionFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				defaultButtonTextColor();
 				updateCurrentQuestion("B");
 				updateButtonColor(bButton);
@@ -154,7 +152,6 @@ public class TestQuestionFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				defaultButtonTextColor();
 				updateCurrentQuestion("C");
 				updateButtonColor(cButton);
@@ -165,7 +162,6 @@ public class TestQuestionFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				defaultButtonTextColor();
 				updateCurrentQuestion("D");
 				updateButtonColor(dButton);
@@ -176,7 +172,6 @@ public class TestQuestionFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				defaultButtonTextColor();
 				updateCurrentQuestion("E");
 				updateButtonColor(eButton);
@@ -187,10 +182,8 @@ public class TestQuestionFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Show the solution for the current question
 				String _solutionText = selectedTest.getQuestions().get(currentIndex).getSolutionText();
 				mCallback.onShowSoluton(_solutionText);
-				//Toast.makeText(getActivity(), "Solution!", Toast.LENGTH_SHORT).show();
 			}});
 		
 		mDetector = new GestureDetectorCompat(getActivity(), new MyGestureListener());
@@ -199,7 +192,6 @@ public class TestQuestionFragment extends Fragment {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
 				Log.d(DEBUG_TAG, "Set onTouch event...");
 				mDetector.onTouchEvent(event);
 				v.performClick();
@@ -292,7 +284,7 @@ public class TestQuestionFragment extends Fragment {
 	/**
 	 * Clear all data from tests and reset them for the next test
 	 */
-	private void clearAndResetTests() {
+	protected void clearAndResetTests() {
 		defaultButtonTextColor();
 		//reset all question selectedOption properties to null
 		for(Question q : selectedTest.getQuestions()) {
@@ -305,7 +297,7 @@ public class TestQuestionFragment extends Fragment {
 	
 	private void endTestAction() {
         String opts = selectedTest.getQuestions().get(currentIndex).getSelectedOption();
-        if(opts != null) {
+        if((opts != null) && !opts.equals(MainActivity.DEFAULT_Z)) {
         	if(opts.equals("A")) {
         		updateButtonColor(aButton);
         	}
@@ -437,7 +429,7 @@ public class TestQuestionFragment extends Fragment {
             currentIndex = x - 1;
             updateImage();
             String opts = selectedTest.getQuestions().get(currentIndex).getSelectedOption();
-            if(opts != null) {
+            if((opts != null) && !opts.equals(MainActivity.DEFAULT_Z)) {
             	if(opts.equals("A")) {
             		updateButtonColor(aButton);
             	}
@@ -454,7 +446,7 @@ public class TestQuestionFragment extends Fragment {
             		updateButtonColor(eButton);
             	}
             	if(testCompleted) {
-            		if(!opts.equals(selectedTest.getQuestions().get(currentIndex).getSolution())) {
+            		if(!opts.equals(selectedTest.getQuestions().get(currentIndex).getSolution()) && !opts.equals(MainActivity.DEFAULT_Z)) {
             			String message = opts + " is incorrect.  The correct answer is " + selectedTest.getQuestions().get(currentIndex).getSolution();
             			switch(QuestionEnum.get(opts.toUpperCase(Locale.US))) {
             			case A:
@@ -533,6 +525,7 @@ public class TestQuestionFragment extends Fragment {
 	private void calcTestResults() {
 		StringBuffer sb = new StringBuffer();
 		selectedTest.getQuestions();
+		mNumberOfCorrectAnswers = 0;
 		for(Question q : selectedTest.getQuestions()) {
 			// getSolution() will never return a null value, whereas getSelectedOption() can return a null value
 			if(q.getSolution().equals(q.getSelectedOption())) {

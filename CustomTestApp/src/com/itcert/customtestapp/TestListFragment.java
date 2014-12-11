@@ -26,7 +26,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.itcert.customtestapp.adapter.TestListAdapter;
 import com.itcert.customtestapp.model.Question;
@@ -40,7 +39,6 @@ public class TestListFragment extends Fragment {
 	TextView test1TextView;
 	private ListView mTestListView;
 	
-	//private ArrayAdapter<String> mArrayAdapter;
 	private TestListAdapter mTestListAdapter;
 	private ArrayList<String> mTestList;
 	
@@ -201,10 +199,10 @@ public class TestListFragment extends Fragment {
 				eventType = configXml.getEventType();
 			}
 		} catch (XmlPullParserException e) {
-			// TODO Auto-generated catch block
+			Log.e(TAG, e.getMessage());
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			Log.e(TAG, e.getMessage());
 			e.printStackTrace();
 		}
 		return tests;
@@ -237,14 +235,10 @@ public class TestListFragment extends Fragment {
 					testObjects.get(index).setScoreText("Try me out! >");
 				}
 				index++;
-				//aBuffer += aTestScoreRow + "\n";
 			}
-			//txtData.setText(aBuffer);
 			myReader.close();
-			//Toast.makeText(getActivity().getBaseContext(),"Done reading SD 'scores.txt'" + aBuffer,Toast.LENGTH_SHORT).show();
 		} catch (Exception e) {
-			Toast.makeText(getActivity().getBaseContext(), e.getMessage(),
-					Toast.LENGTH_SHORT).show();
+			Log.e(TAG, e.getMessage());
 		}
 	}
 
