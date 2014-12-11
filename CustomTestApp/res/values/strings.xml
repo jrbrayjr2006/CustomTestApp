@@ -16,6 +16,7 @@
     <string name="label_solution">Solution</string>
     <string name="close_label">Close</string>
     <string name="start_new_test_label">Start New Test</string>
+    <string name="back_to_test_label">Back To Test</string>
     <string name="question">Question x/10</string>
     <string name="question_image">Question Image</string>
     <string name="timer_default">10:00</string>

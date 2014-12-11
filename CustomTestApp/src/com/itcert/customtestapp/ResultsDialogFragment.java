@@ -63,7 +63,7 @@ public class ResultsDialogFragment extends DialogFragment {
                 ((MainActivity)getActivity()).doPositiveClick();
             }
         });
-		builder.setNegativeButton(getActivity().getResources().getString(R.string.close_label), new DialogInterface.OnClickListener() {
+		builder.setNegativeButton(getActivity().getResources().getString(R.string.back_to_test_label), new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -100,7 +100,11 @@ public class ResultsDialogFragment extends DialogFragment {
 		sb.append("\n");
 		sb.append("\nReview These Questions");
 		sb.append("\n");
-		sb.append(this.mIncorrectAnswers);
+		if(this.mIncorrectAnswers == null) {
+			sb.append("All are correct, nothing to review.");
+		} else {
+			sb.append(this.mIncorrectAnswers);
+		}
 		return sb.toString();
 	}
 
