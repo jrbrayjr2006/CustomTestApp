@@ -121,7 +121,7 @@ public class TestQuestionFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				calcTestResults();
-				clearAndResetTests();
+				//clearAndResetTests();
 				mCallback.onEndTestClick(mNumberOfCorrectAnswers, mReviewQuestions, mTestTitle);
 				
 			}

@@ -42,6 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:paddingLeft="10dp"
-        android:text="@string/start_new_test_label" />
+        android:text="@string/start_new_test_label"
+        android:visibility="gone" />
 
 </LinearLayout>

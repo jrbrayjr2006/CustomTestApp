@@ -18,6 +18,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.pm.ActivityInfo;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
@@ -121,7 +122,6 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 
 	@Override
 	public void onTestSelected(int index) {
-		// TODO Auto-generated method stub
 		ArrayList<String> testList = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.tests)));
 		//Toast.makeText(this, "Test selected:  " + testList.get(index), Toast.LENGTH_SHORT).show();
 		if(fragmentManager == null) {
@@ -145,6 +145,7 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 
 	@Override
 	public void onEndTestClick(int _numCorrect, String _review, String _title) {
+		/*
 		if(fragmentManager == null) {
 			fragmentManager = getFragmentManager();
 		}
@@ -154,24 +155,34 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 		if(mTestResultIndex < 0) {
 			mTestResultIndex = 0;
 		}
+		*/
+		// DialogFragment.show() will take care of adding the fragment
+	    // in a transaction.  We also want to remove any currently showing
+	    // dialog, so make our own transaction and take care of that here.
+	    FragmentTransaction ft = getFragmentManager().beginTransaction();
+	    Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+	    if (prev != null) {
+	        ft.remove(prev);
+	    }
+	    ft.addToBackStack(null);
+
 		
 		Bundle arguments = new Bundle();
 		arguments.putInt(NUM_CORRECT_KEY, _numCorrect);
 		arguments.putString(REVIEW_LIST_KEY, _review);
 		arguments.putString(TEST_TITLE, _title);
-		mResultsFragment.setArguments(arguments);
 		
-		//TODO update test scores in objects and
 		testObjectList.get(mTestResultIndex).setScore(_numCorrect);
 		testObjectList.get(mTestResultIndex).setScoreText("score: " + _numCorrect + " >");
 		writeScoreXml(testObjectList);
-		
-		fragmentManager.beginTransaction().replace(R.id.fragmentContainer, mResultsFragment).commit();
+
+		DialogFragment resultsDialogFragment = ResultsDialogFragment.newInstance(_numCorrect, _review, _title);
+		//resultsDialogFragment.setArguments(arguments);
+		resultsDialogFragment.show(fragmentManager, "dialog");
 	}
 	
 	@Override
 	public void onShowSoluton(String _solutionText) {
-		// TODO Auto-generated method stub
 		openSolutionDialog(_solutionText);
 	}
 	
@@ -202,7 +213,6 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 	 * 
 	 */
 	private void openHelpDialog() {
-		//TODO Flesh this method out
     	DialogFragment dmHelp = new HelpDialogFragment();
     	dmHelp.show(getFragmentManager(), getResources().getString(R.string.action_help));
     	
@@ -337,21 +347,10 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 					String element = solutionsXml.getName();
 					Log.d(TAG, "XML element is " + element);
 					if(element.equals("test")) {
-						//TestObject to = new TestObject();  //TODO CHANGE THIS
-						//List<Question> questions = new ArrayList<Question>();
-						//testID = solutionsXml.getAttributeValue(0);
+						
 						Log.d(TAG, "ID of the test is " + solutionsXml.getAttributeValue(0));
 						Log.d(TAG, "Title of the test is " + solutionsXml.getAttributeValue(1));
-						/*
-						for(TestObject t : _tests) {
-							if(t.getTestID().equals(testID)) {
-								//TODO populate test solution text
-								for(Question q : t.getQuestions()) {
-									q.setSolutionText("Test solution text for " + testID + " question " + q.getQuestionNumber());
-								}
-							}
-						}
-						*/
+						
 						for(int i = 0; i < MAX_NUMBER_OF_QUESTIONS; i++) { 
 							solutionsXml.next();
 							if((solutionsXml.getName() != null) && (solutionsXml.getName().equals("question"))) {
@@ -361,7 +360,6 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 								
 								solutionsXml.next();  // go to node after question node
 								String _solutionText = solutionsXml.getText().toString();
-								//TODO add logic to add solution to test objects
 								testObjectList.get(_testIndex).getQuestions().get(_index).setSolutionText(_solutionText);
 								Log.d(TAG, "The solution text is: " + _solutionText);
 								solutionsXml.next();
@@ -399,9 +397,14 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 			scoresOutWriter.append("\ntest1=8");
 			scoresOutWriter.append("\ntest2=9");
 			scoresOutWriter.append("\ntest3=5");
+			scoresOutWriter.append("\ntest4=-1");
+			scoresOutWriter.append("\ntest5=5");
+			scoresOutWriter.append("\ntest6=5");
+			scoresOutWriter.append("\ntest7=5");
 			scoresOutWriter.close();
 			fOut.close();
-			Toast.makeText(getBaseContext(), "Done writing SD 'mysdfile.txt'", Toast.LENGTH_SHORT).show();
+			//Toast.makeText(getBaseContext(), "Done writing SD 'scores.txt'", Toast.LENGTH_SHORT).show();
+			Log.d(TAG,"Done writing SD 'scores.txt'");
 		} catch(IOException ioe) {
 			Log.e(TAG, ioe.getMessage());
 		}
@@ -414,7 +417,7 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 	 * @param _tests
 	 * Test method  testObjectList
 	 */
-	protected void writeScoreXml(List<TestObject> _tests) {
+	private void writeScoreXml(List<TestObject> _tests) {
 		Log.d(TAG, "Entering writeScoreXml(List) method...");
 		try {
 			// use internal storage
@@ -470,5 +473,16 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 			Toast.makeText(getBaseContext(), e.getMessage(),Toast.LENGTH_SHORT).show();
 		}
 	}
+	
+	public void doPositiveClick() {
+		onShowTestList();
+	    Log.i(TAG, "Positive click!");
+	}
+	
+	public void doNegativeClick() {
+		
+		Log.i(TAG, "Negative click!");
+	}
+
 
 }

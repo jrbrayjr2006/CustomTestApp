@@ -7,10 +7,8 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
@@ -27,7 +25,6 @@ public class ResultsFragment extends Fragment {
 	private Button mStartNewTestBtn;
 	private int mNumberCorrect;
 	private String mIncorrectAnswers;
-	private String mTestTitle;
 	
 	OnResultsListener mCallback;
 	
@@ -38,9 +35,7 @@ public class ResultsFragment extends Fragment {
 	/**
 	 * 
 	 */
-	public ResultsFragment() {
-		// TODO Auto-generated constructor stub
-	}
+	public ResultsFragment() {}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +49,6 @@ public class ResultsFragment extends Fragment {
 		
 		mNumberCorrect = getArguments().getInt(MainActivity.NUM_CORRECT_KEY);
 		mIncorrectAnswers = getArguments().getString(MainActivity.REVIEW_LIST_KEY);
-		mTestTitle = getArguments().getString(MainActivity.TEST_TITLE);
 		
 		String evalMessege = getTestEvaluation(mNumberCorrect);
 		
@@ -72,7 +66,6 @@ public class ResultsFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				mCallback.onShowTestList();
 			}
 		});
