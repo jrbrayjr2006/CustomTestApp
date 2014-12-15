@@ -132,6 +132,7 @@ public class TestQuestionFragment extends Fragment {
 		    	testCompleted = true;
 		    	solutionButton.setEnabled(true);
 				timer.cancel();
+				endTestAction();
 				mCallback.onEndTestClick(mNumberOfCorrectAnswers, mReviewQuestions, mTestTitle);
 				
 			}
