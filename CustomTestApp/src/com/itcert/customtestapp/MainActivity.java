@@ -18,20 +18,26 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
-//import android.app.FragmentTransaction;
 import android.content.pm.ActivityInfo;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Settings.Secure;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.vending.licensing.AESObfuscator;
+import com.google.android.vending.licensing.LicenseChecker;
+import com.google.android.vending.licensing.LicenseCheckerCallback;
+import com.google.android.vending.licensing.ServerManagedPolicy;
 import com.itcert.customtestapp.ResultsFragment.OnResultsListener;
 import com.itcert.customtestapp.TestListFragment.OnTestSelectedListener;
 import com.itcert.customtestapp.TestQuestionFragment.OnTestListener;
 import com.itcert.customtestapp.model.Question;
 import com.itcert.customtestapp.model.TestObject;
+//import android.app.FragmentTransaction;
 
 
 
@@ -59,6 +65,13 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 	public final static String REVIEW_LIST_KEY = "review";
 	public final static String NUM_CORRECT_KEY = "correct";
 	private final static int MAX_NUMBER_OF_QUESTIONS = 10;
+	
+	private Handler mHandler;
+	
+	private static final String BASE64_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkkflL87eVgT0osVoF1gQDReFBvuTi5BeFmBI96yOuvsRMaWzp4eDdbu+Eo2x74lzAo1RysLh5Na/t79BgdKQx9H8GphfzJrldxXNpQiawNLIbTv3++9VWb4dKXlphntvOx/QO/4W6PDtjzhgJ5wpqBcNlLQtETk+37DF0MvtpYK1eZQeGLL8Su8Fx9Hs+KX5jQzraf0GluyT1qtUIoOJ1/nV5T7SiToLovCSqyNWmzFgr/N3IkEgVJgpu5knNO3C/kOTclAqMi7BbeVvRxtdMhDCwqYHENqpyX0MNvF28nYUrBK69iTOJF0MzBOgSo5ym8EG3v3lifW/kNmkoQkbrwIDAQAB";
+	private static final byte[] SALT = new byte[] {20, -1, -15, -30,  46, -19, 103, -74,  38, -39,   0, -26, -48, -95,  42, 23, 67, -13, 68, 102};
+	private LicenseCheckerCallback mLicenseCheckerCallback;
+    private LicenseChecker mChecker;
 	
 
     @Override
@@ -91,6 +104,20 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
         	}
         	fragmentManager.beginTransaction().add(R.id.fragmentContainer, mTestListFragment).commit();
         }
+        
+        mHandler = new Handler();
+
+        // Try to use more data here. ANDROID_ID is a single point of attack.
+        String deviceId = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
+        
+        // Library calls this when it's done.
+        mLicenseCheckerCallback = new MyLicenseCheckerCallback();
+        // Construct the LicenseChecker with a policy.
+        mChecker = new LicenseChecker(
+            this, new ServerManagedPolicy(this,
+                new AESObfuscator(SALT, getPackageName(), deviceId)),
+            BASE64_PUBLIC_KEY);
+        doCheck();
         
     }
 
@@ -487,6 +514,64 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 		
 		Log.i(TAG, "Negative click!");
 	}
+	
+	private void doCheck() {
+        //mCheckLicenseButton.setEnabled(false);
+        setProgressBarIndeterminateVisibility(true);
+        //mStatusText.setText(R.string.checking_license);
+        mChecker.checkAccess(mLicenseCheckerCallback);
+    }
+	
+	
+	private void displayResult(final String result) {
+        mHandler.post(new Runnable() {
+            public void run() {
+                //mStatusText.setText(result);
+                setProgressBarIndeterminateVisibility(false);
+            }
+        });
+    }
+	
+	private class MyLicenseCheckerCallback implements LicenseCheckerCallback {
+        public void allow(int policyReason) {
+            if (isFinishing()) {
+                // Don't update UI if Activity is finishing.
+                return;
+            }
+            // Should allow user access.
+            displayResult(getString(R.string.allow));
+        }
+
+        public void dontAllow(int policyReason) {
+            if (isFinishing()) {
+                // Don't update UI if Activity is finishing.
+                return;
+            }
+            displayResult(getString(R.string.dont_allow));
+            // Should not allow access. In most cases, the app should assume
+            // the user has access unless it encounters this. If it does,
+            // the app should inform the user of their unlicensed ways
+            // and then either shut down the app or limit the user to a
+            // restricted set of features.
+            // In this example, we show a dialog that takes the user to Market.
+            // If the reason for the lack of license is that the service is
+            // unavailable or there is another problem, we display a
+            // retry button on the dialog and a different message.
+            //displayDialog(policyReason == Policy.RETRY);
+        }
+
+        public void applicationError(int errorCode) {
+            if (isFinishing()) {
+                // Don't update UI if Activity is finishing.
+                return;
+            }
+            // This is a polite way of saying the developer made a mistake
+            // while setting up or calling the license checker library.
+            // Please examine the error code and fix the error.
+            String result = String.format(getString(R.string.application_error), errorCode);
+            displayResult(result);
+        }
+    }
 
 
 }
