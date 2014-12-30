@@ -33,7 +33,9 @@ public class LicenseCheckDialogFragment extends DialogFragment {
 		return builder.create();
 	}
 	
-	
+	/**
+	 * Other code can be added to this method to perform other activities related to unlicensed apps
+	 */
 	private void closeAppOnLicenseFailure(){
 		getActivity().finish();
 	}
