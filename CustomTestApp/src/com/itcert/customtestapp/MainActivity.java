@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.google.android.vending.licensing.AESObfuscator;
 import com.google.android.vending.licensing.LicenseChecker;
 import com.google.android.vending.licensing.LicenseCheckerCallback;
+import com.google.android.vending.licensing.Policy;
 import com.google.android.vending.licensing.ServerManagedPolicy;
 import com.itcert.customtestapp.ResultsFragment.OnResultsListener;
 import com.itcert.customtestapp.TestListFragment.OnTestSelectedListener;
@@ -519,7 +520,19 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
         //mCheckLicenseButton.setEnabled(false);
         setProgressBarIndeterminateVisibility(true);
         //mStatusText.setText(R.string.checking_license);
-        mChecker.checkAccess(mLicenseCheckerCallback);
+        mChecker.checkAccess(mLicenseCheckerCallback, this);
+    }
+	
+	private void displayDialog(final boolean showRetry) {
+        mHandler.post(new Runnable() {
+            public void run() {
+                setProgressBarIndeterminateVisibility(false);
+                //showDialog(showRetry ? 1 : 0);
+                DialogFragment licenseDialogFragment = new LicenseCheckDialogFragment();
+                licenseDialogFragment.show(getFragmentManager(), "License Check");
+                //mCheckLicenseButton.setEnabled(true);
+            }
+        });
     }
 	
 	
@@ -544,7 +557,7 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 
         public void dontAllow(int policyReason) {
             if (isFinishing()) {
-                // Don't update UI if Activity is finishing.
+                Toast.makeText(getApplicationContext(), "You do not have a valid license!", Toast.LENGTH_LONG).show();
                 return;
             }
             displayResult(getString(R.string.dont_allow));
@@ -557,7 +570,7 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
             // If the reason for the lack of license is that the service is
             // unavailable or there is another problem, we display a
             // retry button on the dialog and a different message.
-            //displayDialog(policyReason == Policy.RETRY);
+            displayDialog(policyReason == Policy.RETRY);
         }
 
         public void applicationError(int errorCode) {

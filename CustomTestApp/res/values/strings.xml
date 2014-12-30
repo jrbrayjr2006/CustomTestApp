@@ -29,6 +29,23 @@
     <string name="low_performance">Low performance!</string>
     <string name="average_performance">Average performance!</string>
     <string name="excellent_performance">Excellent performance!</string>
+    <string name="allow">Allow</string>
+    <string name="dont_allow">Don\'t allow</string>
+    <string name="application_error">App Error</string>
+    <string name="eula_title">End User License Agreement</string>
+    <string name="eula_accept">Accept</string>
+    <string name="eula_refuse">Refuse</string>
+    <!-- License checking status messages -->
+    <string name="check_license">Check license</string>
+    <string name="checking_license">Checking license&#8230;</string>
+
+    <!-- Unlicensed dialog messages -->
+    <string name="unlicensed_dialog_title">Application not licensed</string>
+    <string name="unlicensed_dialog_body">This application is not licensed. Please purchase it from Android Market.</string>
+    <string name="unlicensed_dialog_retry_body">Unable to validate license. Check to see if a network connection is available.</string>
+    <string name="buy_button">Buy app</string>
+    <string name="retry_button">Retry</string>
+    <string name="quit_button">Exit</string>
     <string-array name="tests">
         <item>test 1</item>
         <item>test 2</item>
