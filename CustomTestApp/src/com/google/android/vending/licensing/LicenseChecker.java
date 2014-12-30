@@ -16,9 +16,19 @@
 
 package com.google.android.vending.licensing;
 
-import com.google.android.vending.licensing.util.Base64;
-import com.google.android.vending.licensing.util.Base64DecoderException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -31,17 +41,8 @@ import android.os.RemoteException;
 import android.provider.Settings.Secure;
 import android.util.Log;
 
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Set;
+import com.google.android.vending.licensing.util.Base64;
+import com.google.android.vending.licensing.util.Base64DecoderException;
 
 /**
  * Client library for Android Market license verifications.
@@ -133,7 +134,7 @@ public class LicenseChecker implements ServiceConnection {
      * <p>
      * @param callback
      */
-    public synchronized void checkAccess(LicenseCheckerCallback callback) {
+    public synchronized void checkAccess(LicenseCheckerCallback callback, Activity _activity) {
         // If we have a valid recent LICENSED response, we can skip asking
         // Market.
         if (mPolicy.allowAccess()) {
@@ -150,9 +151,11 @@ public class LicenseChecker implements ServiceConnection {
                             .bindService(
                                     new Intent(
                                             new String(
-                                                    Base64.decode("Y29tLmFuZHJvaWQudmVuZGluZy5saWNlbnNpbmcuSUxpY2Vuc2luZ1NlcnZpY2U="))),
+                                                    Base64.decode("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkkflL87eVgT0osVoF1gQDReFBvuTi5BeFmBI96yOuvsRMaWzp4eDdbu+Eo2x74lzAo1RysLh5Na/t79BgdKQx9H8GphfzJrldxXNpQiawNLIbTv3++9VWb4dKXlphntvOx/QO/4W6PDtjzhgJ5wpqBcNlLQtETk+37DF0MvtpYK1eZQeGLL8Su8Fx9Hs+KX5jQzraf0GluyT1qtUIoOJ1/nV5T7SiToLovCSqyNWmzFgr/N3IkEgVJgpu5knNO3C/kOTclAqMi7BbeVvRxtdMhDCwqYHENqpyX0MNvF28nYUrBK69iTOJF0MzBOgSo5ym8EG3v3lifW/kNmkoQkbrwIDAQAB"))),
                                     this, // ServiceConnection.
                                     Context.BIND_AUTO_CREATE);
+                    // MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkkflL87eVgT0osVoF1gQDReFBvuTi5BeFmBI96yOuvsRMaWzp4eDdbu+Eo2x74lzAo1RysLh5Na/t79BgdKQx9H8GphfzJrldxXNpQiawNLIbTv3++9VWb4dKXlphntvOx/QO/4W6PDtjzhgJ5wpqBcNlLQtETk+37DF0MvtpYK1eZQeGLL8Su8Fx9Hs+KX5jQzraf0GluyT1qtUIoOJ1/nV5T7SiToLovCSqyNWmzFgr/N3IkEgVJgpu5knNO3C/kOTclAqMi7BbeVvRxtdMhDCwqYHENqpyX0MNvF28nYUrBK69iTOJF0MzBOgSo5ym8EG3v3lifW/kNmkoQkbrwIDAQAB
+                    // Y29tLmFuZHJvaWQudmVuZGluZy5saWNlbnNpbmcuSUxpY2Vuc2luZ1NlcnZpY2U=
 
                     if (bindResult) {
                         mPendingChecks.offer(validator);
@@ -220,7 +223,8 @@ public class LicenseChecker implements ServiceConnection {
         public void verifyLicense(final int responseCode, final String signedData,
                 final String signature) {
             mHandler.post(new Runnable() {
-                public void run() {
+                @SuppressWarnings("deprecation")
+				public void run() {
                     Log.i(TAG, "Received response.");
                     // Make sure it hasn't already timed out.
                     if (mChecksInProgress.contains(mValidator)) {
