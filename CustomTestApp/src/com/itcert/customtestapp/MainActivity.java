@@ -585,6 +585,12 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
             displayResult(result);
         }
     }
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mChecker.onDestroy();
+	}
 
 
 }
