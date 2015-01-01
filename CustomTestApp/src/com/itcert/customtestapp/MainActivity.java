@@ -74,7 +74,9 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
 	private LicenseCheckerCallback mLicenseCheckerCallback;
     private LicenseChecker mChecker;
 	
-
+    /**
+     * Comment out the call to the doCheck() method to disable licensing
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,7 +120,7 @@ public class MainActivity extends Activity implements OnTestSelectedListener, On
             this, new ServerManagedPolicy(this,
                 new AESObfuscator(SALT, getPackageName(), deviceId)),
             BASE64_PUBLIC_KEY);
-        doCheck();
+        //doCheck();
         
     }
 
